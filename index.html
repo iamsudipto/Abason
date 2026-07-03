@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Abashon | আবাসন — Luxury Housing Ecosystem</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-follower"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">আবা<span>সন</span></div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  <div class="loader-text">Bangladesh's First AI Housing Ecosystem</div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo" onclick="goPage('home')" style="cursor:pointer">আবা<span>সন</span></div>
+  <ul class="nav-links">
+    <li><a data-p="home" onclick="goPage('home')">হোম</a></li>
+    <li><a data-p="listings" onclick="goPage('listings')">Properties</a></li>
+    <li><a data-p="ai" onclick="goPage('ai')">AI Assistant</a></li>
+    <li><a data-p="shifting" onclick="goPage('shifting')">Shifting</a></li>
+    <li><a data-p="interior" onclick="goPage('interior')">Interior</a></li>
+    <li><a data-p="about" onclick="goPage('about')">About</a></li>
+  </ul>
+  <div style="display:flex;gap:10px;align-items:center">
+    <button id="nav-explore" class="nav-cta ripple-container" onclick="goPage('listings')"><span>Explore Homes</span></button>
+    <button id="nav-addprop" class="nav-cta ripple-container" style="display:none" onclick="openAddProperty()"><span>＋ Add Property</span></button>
+    <span id="nav-auth" style="display:flex;gap:10px;align-items:center"></span>
+  </div>
+</nav>
+
+<!-- ═══ HOME PAGE ═══ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-orb-1"></div>
+    <div class="hero-orb-2"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Bangladesh's First AI-Powered Housing Ecosystem</div>
+      <h1 class="hero-h1">Find Your <em>Dream Home</em><br/>With AI Precision</h1>
+      <p class="hero-sub">বাসা ভাড়া, কেনা-বেচা, শিফটিং, ইন্টেরিয়র ডিজাইন — সবকিছু এক জায়গায়। Search → Select → Book → Move → Settle.</p>
+      <div class="hero-actions">
+        <button class="btn-primary ripple-container" onclick="goPage('listings')"><span>🔍 Explore Properties</span></button>
+        <button class="btn-outline" onclick="goPage('ai')">🤖 Try AI Assistant</button>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num"><span class="counter" data-target="75">0</span>%</div><div class="hero-stat-label">Families in Rentals</div></div>
+      <div class="hero-stat"><div class="hero-stat-num"><span class="counter" data-target="10">0</span>L+</div><div class="hero-stat-label">Annual Relocations</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">6-in-1</div><div class="hero-stat-label">Service Platform</div></div>
+    </div>
+    <div class="hero-scroll">
+      <span class="scroll-text">Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <div class="trust-inner">
+      <div class="trust-item">🤖 <strong>AI-Powered</strong></div>
+      <div class="trust-sep"></div>
+      <div class="trust-item">✅ <strong>Verified Listings</strong></div>
+      <div class="trust-sep"></div>
+      <div class="trust-item">🔒 <strong>Secure Payments</strong></div>
+      <div class="trust-sep"></div>
+      <div class="trust-item">🚚 <strong>Professional Shifting</strong></div>
+      <div class="trust-sep"></div>
+      <div class="trust-item">🎨 <strong>Interior Design</strong></div>
+      <div class="trust-sep"></div>
+      <div class="trust-item">📞 <strong>24/7 Support</strong></div>
+    </div>
+  </div>
+
+  <!-- CITIES -->
+  <section class="city-section">
+    <div class="container">
+      <div class="city-header reveal">
+        <div>
+          <div class="section-eyebrow">Our Cities</div>
+          <div class="section-title">৩ শহরে <em>সার্ভিস</em> চালু</div>
+        </div>
+        <p class="section-sub">ঢাকা, সিলেট ও চট্টগ্রামে শুরু। শীঘ্রই সারা বাংলাদেশে।</p>
+      </div>
+      <div class="city-grid reveal">
+        <div class="city-card tall" onclick="filterCityGo('ঢাকা')">
+          <div class="city-card-img" style="background-image:url('https://images.unsplash.com/photo-1610642372651-fe6e7bc9a017?w=900&h=700&fit=crop')"></div>
+          <div class="city-card-overlay"></div>
+          <div class="city-card-body">
+            <div class="city-badge">⭐ Most Listings</div>
+            <div class="city-name">ঢাকা</div>
+            <div class="city-areas">গুলশান · ধানমন্ডি · উত্তরা · মিরপুর · বনানী</div>
+          </div>
+        </div>
+        <div class="city-card" onclick="filterCityGo('সিলেট')">
+          <div class="city-card-img" style="background-image:url('https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=600&h=350&fit=crop')"></div>
+          <div class="city-card-overlay"></div>
+          <div class="city-card-body">
+            <div class="city-name">সিলেট</div>
+            <div class="city-areas">জিন্দাবাজার · আম্বরখানা · শাহজালালপুর</div>
+          </div>
+        </div>
+        <div class="city-card" onclick="filterCityGo('চট্টগ্রাম')">
+          <div class="city-card-img" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=350&fit=crop')"></div>
+          <div class="city-card-overlay"></div>
+          <div class="city-card-body">
+            <div class="city-name">চট্টগ্রাম</div>
+            <div class="city-areas">খুলশী · পাঁচলাইশ · আগ্রাবাদ</div>
+          </div>
+        </div>
+        <div class="city-card city-card-soon">
+          <div class="city-card-body">
+            <div style="font-size:2rem;margin-bottom:8px">📍</div>
+            <div class="city-name" style="font-size:1.1rem">শীঘ্রই আরো শহর</div>
+            <div class="city-areas" style="margin-top:6px">রাজশাহী · খুলনা · বরিশাল</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOURNEY -->
+  <section class="journey-section">
+    <div class="container">
+      <div class="section-eyebrow reveal">Complete Journey</div>
+      <div class="section-title reveal">Search → Select → Book → <em>Move</em> → Settle</div>
+      <div class="journey-steps" id="journey-steps"></div>
+    </div>
+  </section>
+
+  <!-- AI SECTION -->
+  <section class="ai-section">
+    <div class="container">
+      <div class="ai-grid-wrap">
+        <div>
+          <div class="section-eyebrow reveal">AI Intelligence</div>
+          <div class="section-title reveal">Find Homes with <em>AI Precision</em></div>
+          <p class="section-sub reveal" style="margin-top:16px">আপনার ভাষায় বলুন — AI বুঝবে, ম্যাচ করবে, দেখাবে।</p>
+          <div class="ai-features-grid">
+            <div class="ai-feat-card reveal reveal-delay-1"><div class="ai-feat-icon">💬</div><div class="ai-feat-title">Smart Assistant</div><div class="ai-feat-desc">Natural language এ বাসা খুঁজুন</div><span class="ai-feat-tag">Live Now</span></div>
+            <div class="ai-feat-card reveal reveal-delay-2"><div class="ai-feat-icon">💰</div><div class="ai-feat-title">Price Estimator</div><div class="ai-feat-desc">AI দিয়ে সঠিক ভাড়া জানুন</div><span class="ai-feat-tag">Live Now</span></div>
+            <div class="ai-feat-card reveal reveal-delay-3"><div class="ai-feat-icon">🛡️</div><div class="ai-feat-title">Fraud Detection</div><div class="ai-feat-desc">প্রতিটি listing AI যাচাই করা</div><span class="ai-feat-tag">AI Powered</span></div>
+            <div class="ai-feat-card reveal reveal-delay-4"><div class="ai-feat-icon">🎯</div><div class="ai-feat-title">Smart Match</div><div class="ai-feat-desc">আপনার পছন্দ অনুযায়ী সাজেশন</div><span class="ai-feat-tag">AI Powered</span></div>
+          </div>
+        </div>
+        <div class="ai-chat-widget reveal-right">
+          <div class="ai-chat-header">
+            <div class="ai-chat-av">🤖</div>
+            <div>
+              <div class="ai-chat-title">Abashon AI</div>
+              <div class="ai-chat-status"><div class="status-dot"></div>Online · Ready</div>
+            </div>
+          </div>
+          <div class="ai-chat-msgs" id="home-ai-msgs"></div>
+          <div class="ai-chat-input">
+            <input class="ai-chat-inp" id="home-ai-inp" placeholder="আপনার চাহিদা লিখুন..." onkeydown="if(event.key==='Enter')homeAI()"/>
+            <button class="ai-chat-send" onclick="homeAI()">→</button>
+          </div>
+          <div class="ai-quick-btns">
+            <button class="ai-quick" onclick="homeQ('ঢাকায় ২ BHK ৩০ হাজারের মধ্যে')">ঢাকায় ২ BHK</button>
+            <button class="ai-quick" onclick="homeQ('সিলেটে সস্তা বাসা')">সিলেট বাজেট</button>
+            <button class="ai-quick" onclick="homeQ('চট্টগ্রামে ফ্যামিলি')">চট্টগ্রাম ফ্যামিলি</button>
+            <button class="ai-quick" onclick="homeQ('প্রিমিয়াম ৪ BHK')">প্রিমিয়াম</button>
+          </div>
+          <div class="ai-results" id="home-ai-results">
+            <div class="ai-results-title">🎯 AI Matched Properties</div>
+            <div class="ai-result-cards" id="home-ai-cards"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESTIMATORS -->
+  <section class="estimator-section">
+    <div class="container">
+      <div class="section-eyebrow reveal">AI Calculators</div>
+      <div class="section-title reveal">Know Your <em>Numbers</em></div>
+      <div class="est-grid" style="margin-top:48px">
+        <div class="est-card reveal reveal-delay-1">
+          <div class="est-card-title">💰 Rental Price Estimator</div>
+          <div class="est-card-sub">এলাকা ও সাইজ দিন — AI সঠিক ভাড়া বলে দেবে</div>
+          <div class="est-form">
+            <div class="est-row">
+              <div class="est-field"><label class="est-label">City</label><select class="est-select" id="e-city"><option value="ঢাকা">ঢাকা</option><option value="সিলেট">সিলেট</option><option value="চট্টগ্রাম">চট্টগ্রাম</option></select></div>
+              <div class="est-field"><label class="est-label">Area</label><select class="est-select" id="e-area"><option>গুলশান</option><option>বনানী</option><option>ধানমন্ডি</option><option>মিরপুর</option><option>উত্তরা</option><option>শাহজালালপুর</option><option>খুলশী</option></select></div>
+            </div>
+            <div class="est-row">
+              <div class="est-field"><label class="est-label">Bedrooms</label><select class="est-select" id="e-bed"><option value="1">১ বেড</option><option value="2">২ বেড</option><option value="3">৩ বেড</option><option value="4">৪ বেড</option></select></div>
+              <div class="est-field"><label class="est-label">Size (sqft)</label><input class="est-input" id="e-sqft" type="number" value="900"/></div>
+            </div>
+            <button class="est-btn ripple-container" onclick="estRent()">🤖 <span>Estimate with AI</span></button>
+          </div>
+          <div class="est-result" id="e-res">
+            <div class="est-result-label">AI Estimate</div>
+            <div class="est-result-price" id="e-price"></div>
+            <div class="est-result-range" id="e-range"></div>
+          </div>
+        </div>
+        <div class="est-card reveal reveal-delay-2">
+          <div class="est-card-title">🚛 Shifting Cost Calculator</div>
+          <div class="est-card-sub">লোকেশন ও মালামাল দিন — খরচ জানুন</div>
+          <div class="est-form">
+            <div class="est-field"><label class="est-label">Pickup Location</label><select class="est-select" id="sc-from"><option>গুলশান, ঢাকা</option><option>ধানমন্ডি, ঢাকা</option><option>মিরপুর, ঢাকা</option><option>শাহজালালপুর, সিলেট</option><option>খুলশী, চট্টগ্রাম</option></select></div>
+            <div class="est-field"><label class="est-label">Drop Location</label><select class="est-select" id="sc-to"><option>উত্তরা, ঢাকা</option><option>বনানী, ঢাকা</option><option>আম্বরখানা, সিলেট</option><option>আগ্রাবাদ, চট্টগ্রাম</option></select></div>
+            <div class="est-row">
+              <div class="est-field"><label class="est-label">Load Size</label><select class="est-select" id="sc-load"><option value="small">ছোট (১ রুম)</option><option value="medium">মাঝারি (২-৩ রুম)</option><option value="large">বড় (৪+ রুম)</option></select></div>
+              <div class="est-field"><label class="est-label">Labor</label><select class="est-select" id="sc-labor"><option value="no">না</option><option value="yes">২ জন</option><option value="yes4">৪ জন</option></select></div>
+            </div>
+            <button class="est-btn ripple-container" onclick="calcShift()">🚛 <span>Calculate Cost</span></button>
+          </div>
+          <div class="est-result" id="sc-res">
+            <div class="est-result-label">Estimated Cost</div>
+            <div class="est-result-price" id="sc-p"></div>
+            <div class="est-result-range" id="sc-n"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="why-section">
+    <div class="container">
+      <div class="why-grid">
+        <div>
+          <div class="section-eyebrow reveal">Why Abashon</div>
+          <div class="section-title reveal">Bangladesh's First<br/><em>Complete</em> Housing Solution</div>
+          <p class="section-sub reveal" style="margin-top:16px;margin-bottom:32px">Bikroy শুধু list করে। Bproperty শুধু দেখায়। আমরা সবকিছু করি — AI দিয়ে।</p>
+          <div class="why-feats">
+            <div class="why-feat reveal"><div class="why-feat-icon">🤖</div><div><div class="why-feat-title">AI-Powered Everything</div><div class="why-feat-desc">Recommendations, fraud detection, price estimation — all AI.</div></div></div>
+            <div class="why-feat reveal reveal-delay-1"><div class="why-feat-icon">🎨</div><div><div class="why-feat-title">Interior Design Service</div><div class="why-feat-desc">বাসা বুক করার পর verified designers এর সাথে সংযুক্ত হোন।</div></div></div>
+            <div class="why-feat reveal reveal-delay-2"><div class="why-feat-icon">🎬</div><div><div class="why-feat-title">Video Tour</div><div class="why-feat-desc">প্রতিটি বাসার ভিডিও — না গিয়েই সিদ্ধান্ত নিন।</div></div></div>
+            <div class="why-feat reveal reveal-delay-3"><div class="why-feat-icon">✅</div><div><div class="why-feat-title">Verified Listings & Owners</div><div class="why-feat-desc">NID যাচাই করা মালিক, AI fraud detection।</div></div></div>
+          </div>
+        </div>
+        <div class="why-stats-grid">
+          <div class="why-stat reveal"><div class="why-stat-num"><span class="counter" data-target="9">0</span>-10L</div><div class="why-stat-label">পরিবার প্রতি বছর বাসা বদলায়</div></div>
+          <div class="why-stat accent reveal reveal-delay-1"><div class="why-stat-num"><span class="counter" data-target="75">0</span>%</div><div class="why-stat-label">বিভাগীয় শহরে ভাড়া বাসায়</div></div>
+          <div class="why-stat reveal reveal-delay-2"><div class="why-stat-num">6-in-1</div><div class="why-stat-label">সার্ভিস এক প্ল্যাটফর্মে</div></div>
+          <div class="why-stat accent reveal reveal-delay-3"><div class="why-stat-num">30<span style="font-size:1.2rem">মাস</span></div><div class="why-stat-label">Break-even target · 50K+ লেনদেন/বছর</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand-name">আবা<span>সন</span></div>
+        <p class="foot-desc">বাংলাদেশের প্রথম AI-Powered অল-ইন-ওয়ান হাউজিং ইকোসিস্টেম। বাসা খোঁজা থেকে উঠে পড়া পর্যন্ত।</p>
+        <div class="foot-badges"><span class="foot-badge">AI Powered</span><span class="foot-badge">SSL Secured</span><span class="foot-badge">bKash</span><span class="foot-badge">Nagad</span></div>
+      </div>
+      <div class="foot-col"><h4>Services</h4><a onclick="goPage('listings')">Rent Home</a><a onclick="goPage('listings')">Buy Home</a><a onclick="goPage('shifting')">Shifting</a><a onclick="goPage('interior')">Interior</a><a onclick="goPage('furniture')">Furniture</a></div>
+      <div class="foot-col"><h4>Cities</h4><a onclick="filterCityGo('ঢাকা')">Dhaka</a><a onclick="filterCityGo('সিলেট')">Sylhet</a><a onclick="filterCityGo('চট্টগ্রাম')">Chattogram</a></div>
+      <div class="foot-col"><h4>Contact</h4><a href="#">📞 16599</a><a href="#">✉️ hello@abashon.com.bd</a><a href="#">📍 Dhaka, Bangladesh</a></div>
+    </div>
+    <div class="foot-bottom"><span>© 2025 Abashon. All rights reserved.</span><span>Privacy · Terms</span></div>
+  </footer>
+</div>
+
+<!-- LISTINGS PAGE -->
+<div class="page" id="page-listings">
+  <div style="padding:120px 64px 80px;max-width:1280px;margin:0 auto">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:48px;flex-wrap:wrap;gap:16px">
+      <div><div class="section-eyebrow">Properties</div><div class="section-title" style="margin-bottom:0">Verified <em>Listings</em></div></div>
+      <button class="btn-primary" onclick="goPage('ai')">🤖 AI Search</button>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="fPill(this,'')">All</button>
+      <button class="filter-btn" onclick="fPill(this,'ঢাকা')">Dhaka</button>
+      <button class="filter-btn" onclick="fPill(this,'সিলেট')">Sylhet</button>
+      <button class="filter-btn" onclick="fPill(this,'চট্টগ্রাম')">Chattogram</button>
+      <button class="filter-btn" onclick="fPill(this,'RENT')">Rent</button>
+      <button class="filter-btn" onclick="fPill(this,'SALE')">Sale</button>
+      <select class="filter-sort" onchange="sortP(this.value)">
+        <option value="def">Recommended</option>
+        <option value="low">Lowest Price</option>
+        <option value="high">Highest Price</option>
+      </select>
+    </div>
+    <div class="prop-grid" id="pgrid"></div>
+  </div>
+</div>
+
+<!-- AI PAGE -->
+<div class="page" id="page-ai">
+  <div style="display:grid;grid-template-columns:400px 1fr;min-height:100vh">
+    <div style="background:var(--bg-3);border-right:1px solid var(--border);padding:100px 32px 32px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh">
+      <div style="font-family:var(--font-display);font-size:1.5rem;font-weight:500;color:var(--white);margin-bottom:4px">🤖 AI Housing<br/><em style="color:var(--gold)">Assistant</em></div>
+      <p style="font-family:var(--font-ui);font-size:.8125rem;color:var(--white-30);margin-bottom:24px;line-height:1.6">আপনার চাহিদা বলুন — AI রিয়েল-টাইমে সেরা বাসা খুঁজে দেবে</p>
+      <div class="ai-full-msgs" id="ai-full-msgs" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:16px"></div>
+      <div style="display:flex;gap:8px">
+        <input id="ai-fi" style="flex:1;padding:10px 16px;background:var(--glass);border:1px solid var(--border);border-radius:100px;color:var(--white);font-family:var(--font-ui);font-size:.8125rem;outline:none" placeholder="বাসার ধরন, এলাকা, বাজেট..." onkeydown="if(event.key==='Enter')fullAI()"/>
+        <button onclick="fullAI()" style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--emerald),var(--emerald-l));color:var(--ink-white);font-weight:700;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:none;cursor:pointer">→</button>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
+        <button class="ai-quick" onclick="aiQ('গুলশানে ২ BHK ৩০-৪০ হাজার লিফট লাগবে')">গুলশান ২ BHK</button>
+        <button class="ai-quick" onclick="aiQ('সিলেটে ১৫ হাজারের মধ্যে')">সিলেট বাজেট</button>
+        <button class="ai-quick" onclick="aiQ('চট্টগ্রামে ৩ বেডরুমের ফ্যামিলি')">চট্টগ্রাম</button>
+        <button class="ai-quick" onclick="aiQ('ব্যাচেলরের জন্য ছোট স্টুডিও')">ব্যাচেলর</button>
+        <button class="ai-quick" onclick="aiQ('৪ BHK প্রিমিয়াম ফ্ল্যাট')">প্রিমিয়াম</button>
+      </div>
+    </div>
+    <div style="padding:100px 48px 48px;overflow-y:auto;background:var(--bg-2)">
+      <div id="ai-res-hd" style="margin-bottom:32px">
+        <div id="ai-res-ttl" style="font-family:var(--font-display);font-size:1.75rem;font-weight:500;color:var(--white);margin-bottom:6px">AI Housing Matcher</div>
+        <div id="ai-res-sub" style="font-family:var(--font-ui);font-size:.875rem;color:var(--white-30)">বাম দিকে আপনার চাহিদা লিখুন</div>
+      </div>
+      <div id="ai-match">
+        <div style="text-align:center;padding:80px 20px">
+          <div style="font-size:3rem;margin-bottom:16px">🤖</div>
+          <div style="font-family:var(--font-display);font-size:1.25rem;color:var(--white-60);margin-bottom:8px">AI Assistant Ready</div>
+          <div style="font-family:var(--font-ui);font-size:.875rem;color:var(--white-30)">যেমন: "ধানমন্ডিতে ২ BHK চাই, বাজেট ২৫ হাজার"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SHIFTING PAGE -->
+<div class="page" id="page-shifting">
+  <div style="padding:100px 64px 80px;max-width:1200px;margin:0 auto">
+    <div style="background:linear-gradient(135deg,var(--emerald-d),var(--bg-3));border:1px solid var(--border-gold);border-radius:32px;padding:56px;text-align:center;margin-bottom:48px">
+      <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:700;color:var(--ink-white);margin-bottom:12px">🚚 Shifting Service</div>
+      <p style="color:rgba(250,250,248,.75);font-size:1.0625rem">Moving is Stressful — We Make it Easy</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-bottom:48px">
+      <div class="est-card">
+        <div class="est-card-title">AI Cost Calculator</div>
+        <div class="est-card-sub">লোকেশন ও মালামাল দিন</div>
+        <div class="est-form">
+          <div class="est-field"><label class="est-label">Pickup</label><select class="est-select" id="sc2-from"><option>গুলশান, ঢাকা</option><option>ধানমন্ডি, ঢাকা</option><option>মিরপুর, ঢাকা</option><option>শাহজালালপুর, সিলেট</option><option>খুলশী, চট্টগ্রাম</option></select></div>
+          <div class="est-field"><label class="est-label">Drop</label><select class="est-select" id="sc2-to"><option>উত্তরা, ঢাকা</option><option>বনানী, ঢাকা</option><option>আম্বরখানা, সিলেট</option><option>আগ্রাবাদ, চট্টগ্রাম</option></select></div>
+          <div class="est-row">
+            <div class="est-field"><label class="est-label">Load</label><select class="est-select" id="sc2-load"><option value="small">ছোট</option><option value="medium">মাঝারি</option><option value="large">বড়</option></select></div>
+            <div class="est-field"><label class="est-label">Labor</label><select class="est-select" id="sc2-labor"><option value="no">না</option><option value="yes">২ জন</option><option value="yes4">৪ জন</option></select></div>
+          </div>
+          <button class="est-btn" onclick="calcShift2()">🚛 Calculate</button>
+        </div>
+        <div class="est-result" id="sc2-res"><div class="est-result-label">Estimated Cost</div><div class="est-result-price" id="sc2-p"></div><div class="est-result-range" id="sc2-n"></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;justify-content:center">
+        <div style="padding:24px;background:var(--glass);border:1px solid var(--border);border-radius:16px">
+          <div style="font-family:var(--font-display);font-size:1.125rem;color:var(--white);margin-bottom:8px">✅ Professional Team</div>
+          <div style="font-family:var(--font-ui);font-size:.8125rem;color:var(--white-30)">Trained professionals handle everything</div>
+        </div>
+        <div style="padding:24px;background:var(--glass);border:1px solid var(--border);border-radius:16px">
+          <div style="font-family:var(--font-display);font-size:1.125rem;color:var(--white);margin-bottom:8px">🔒 Insured & Safe</div>
+          <div style="font-family:var(--font-ui);font-size:.8125rem;color:var(--white-30)">All items insured during transit</div>
+        </div>
+        <div style="padding:24px;background:var(--glass);border:1px solid var(--border);border-radius:16px">
+          <div style="font-family:var(--font-display);font-size:1.125rem;color:var(--white);margin-bottom:8px">📍 Real-time Tracking</div>
+          <div style="font-family:var(--font-ui);font-size:.8125rem;color:var(--white-30)">Track your move in real-time</div>
+        </div>
+      </div>
+    </div>
+    <div class="section-eyebrow" style="margin-bottom:24px">Our Services</div>
+    <div class="svc-grid" id="svc-grid"></div>
+  </div>
+</div>
+
+<!-- INTERIOR PAGE -->
+<div class="page" id="page-interior">
+  <div style="padding:100px 64px 80px;max-width:1280px;margin:0 auto">
+    <div style="background:linear-gradient(135deg,rgba(14,90,69,.07),rgba(166,124,26,.06));border:1px solid var(--border-gold);border-radius:32px;padding:56px;text-align:center;margin-bottom:48px">
+      <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:500;color:var(--emerald);margin-bottom:12px">🎨 Interior Design</div>
+      <p style="color:var(--white-60);font-size:1.0625rem">নতুন বাসা — নিজের মতো সাজান। Verified designers এর সাথে সংযুক্ত হোন।</p>
+    </div>
+    <div class="int-grid" id="int-grid"></div>
+  </div>
+</div>
+
+<!-- FURNITURE PAGE -->
+<div class="page" id="page-furniture">
+  <div style="padding:100px 64px 80px;max-width:1280px;margin:0 auto">
+    <div style="background:linear-gradient(135deg,rgba(14,90,69,.07),rgba(166,124,26,.06));border:1px solid var(--border-gold);border-radius:32px;padding:56px;text-align:center;margin-bottom:48px">
+      <div style="font-family:var(--font-display);font-size:2.5rem;font-weight:500;color:var(--emerald);margin-bottom:12px">🛋️ Furniture Marketplace</div>
+      <p style="color:var(--white-60);font-size:1.0625rem">নতুন ও পুরাতন ফার্নিচার কিনুন বা বিক্রি করুন।</p>
+    </div>
+    <div class="fur-grid" id="fur-grid"></div>
+  </div>
+</div>
+
+<!-- ABOUT PAGE -->
+<div class="page" id="page-about">
+  <div class="about-section" style="padding:100px 64px 80px">
+    <div class="container">
+      <div style="text-align:center;margin-bottom:64px">
+        <div class="section-eyebrow" style="justify-content:center">About Us</div>
+        <div class="section-title" style="margin-bottom:12px">Bangladesh's First<br/>AI-Powered <em>Housing Ecosystem</em></div>
+        <p style="font-family:var(--font-ui);font-size:1rem;color:var(--white-30);max-width:580px;margin:0 auto;line-height:1.7">Abashon হলো বাংলাদেশের প্রথম integrated housing ecosystem।</p>
+      </div>
+      <div class="about-grid">
+        <div class="about-card reveal">
+          <div class="about-card-title">💰 Revenue Streams</div>
+          <div class="rev-list">
+            <div class="rev-item"><div class="rev-num">১</div>Premium property listing fees</div>
+            <div class="rev-item"><div class="rev-num">২</div>Transaction commission</div>
+            <div class="rev-item"><div class="rev-num">৩</div>Shifting service charges</div>
+            <div class="rev-item"><div class="rev-num">৪</div>Furniture marketplace commission</div>
+            <div class="rev-item"><div class="rev-num">৫</div>Interior designer ad fees</div>
+            <div class="rev-item"><div class="rev-num">৬</div>Premium subscription</div>
+          </div>
+        </div>
+        <div class="about-card reveal reveal-delay-1">
+          <div class="about-card-title">🎯 Milestones</div>
+          <div class="ms-list">
+            <div class="ms-item"><div class="ms-icon">🚀</div><div><div class="ms-title">Launch — July 2026</div><div class="ms-desc">ঢাকা, সিলেট, চট্টগ্রাম। ১০০+ verified properties।</div></div></div>
+            <div class="ms-item"><div class="ms-icon">📈</div><div><div class="ms-title">6–12 Months</div><div class="ms-desc">৮০-৯০ লাখ revenue। ২,৫০০+ families। ৬০-৮০ jobs।</div></div></div>
+            <div class="ms-item"><div class="ms-icon">🌏</div><div><div class="ms-title">5-Year Vision</div><div class="ms-desc">৬৪ districts। 2% market share। 50K+ transactions/year।</div></div></div>
+          </div>
+        </div>
+        <div class="about-card reveal reveal-delay-2" style="grid-column:span 2">
+          <div class="about-card-title">⚔️ Competitive Advantage</div>
+          <div class="comp-table-wrap">
+            <table class="comp-table">
+              <tr><th>Feature</th><th>Bikroy</th><th>Bproperty</th><th>Pack n Move</th><th>Abashon ✨</th></tr>
+              <tr><td>Property Listing</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td><td class="ab yes">✓</td></tr>
+              <tr><td>Shifting Service</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td><td class="ab yes">✓</td></tr>
+              <tr><td>AI Recommendation</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="ab yes">✓</td></tr>
+              <tr><td>Interior Design</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="ab yes">✓</td></tr>
+              <tr><td>Video Tour</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="ab yes">✓</td></tr>
+              <tr><td>Fraud Detection AI</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="ab yes">✓</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="vision-card reveal">
+          <div class="vision-title">বাংলাদেশের সকল ৬৪ জেলায় বিস্তার করে দেশের leading PropTech platform হওয়া</div>
+          <p class="vision-desc">কর্মসংস্থান তৈরি করে এবং housing accessibility উন্নত করে সারাদেশের মানুষের জীবনকে সহজ করা।</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD PAGE -->
+<div class="page" id="page-dashboard">
+  <div style="padding:100px 64px 80px">
+    <div id="dash-buyer">
+    <div class="dash-grid" style="max-width:1280px;margin:0 auto">
+      <div class="dash-side">
+        <div class="dash-user-av" id="db-av">স</div>
+        <div class="dash-user-name" id="db-nm">সুদীপ্ত</div>
+        <div style="text-align:center;margin:6px 0 4px"><span class="role-badge buyer">🛒 Buyer</span></div>
+        <div class="dash-user-email" id="db-em">user@abashon.com.bd</div>
+        <div class="dash-menu">
+          <div class="dm active">📊 Overview</div>
+          <div class="dm">🏠 Saved Homes</div>
+          <div class="dm">📅 Bookings</div>
+          <div class="dm">💳 Payments</div>
+          <div class="dm">🚚 Shifting</div>
+          <div class="dm">🔔 Alerts</div>
+        </div>
+      </div>
+      <div class="dash-content">
+        <div class="stat-row">
+          <div class="stat-c"><div class="stat-n"><span class="counter" data-target="3">0</span></div><div class="stat-l">Saved Homes</div></div>
+          <div class="stat-c"><div class="stat-n"><span class="counter" data-target="1">0</span></div><div class="stat-l">Active Booking</div></div>
+          <div class="stat-c"><div class="stat-n">৳4,500</div><div class="stat-l">Total Paid</div></div>
+          <div class="stat-c"><div class="stat-n"><span class="counter" data-target="2">0</span></div><div class="stat-l">Shifting Orders</div></div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-title">📅 Recent Bookings</div>
+          <div class="bk-item"><img class="bk-img" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=100&h=80&fit=crop"/><div style="flex:1"><div class="bk-t">৩ BHK Apartment, Gulshan</div><div class="bk-l">📍 Gulshan 2, Dhaka · ৳45,000/mo</div></div><div class="bk-st ok">Confirmed</div></div>
+          <div class="bk-item"><img class="bk-img" src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=100&h=80&fit=crop"/><div style="flex:1"><div class="bk-t">২ BHK House, Shahjalal</div><div class="bk-l">📍 Shahjalal, Sylhet · ৳18,000/mo</div></div><div class="bk-st pend">Pending</div></div>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-title">❤️ Saved Homes</div>
+          <div class="prop-grid" id="saved-grid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))"></div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div id="dash-seller" style="display:none;max-width:1280px;margin:0 auto"></div>
+  </div>
+</div>
+
+<div id="toast-wrap"></div>
+
+<!-- ADD PROPERTY MODAL (seller) -->
+<div class="overlay" id="addp-ov" onclick="if(event.target===this)closeM('addp-ov')">
+  <div class="modal" style="max-width:560px">
+    <button class="modal-x" onclick="closeM('addp-ov')">✕</button>
+    <div style="padding:28px">
+      <div style="font-family:var(--font-display);font-size:1.5rem;font-weight:500;color:var(--white)">＋ List a Property</div>
+      <div class="auth-note" style="margin-bottom:14px">Seller — <span id="addp-seller"></span></div>
+      <div class="prog-steps" style="margin-bottom:18px">
+        <div class="prog-s on" id="aps1"><div class="prog-dot">1</div><div class="prog-lbl">Details</div></div>
+        <div class="prog-s" id="aps2"><div class="prog-dot">2</div><div class="prog-lbl">Review</div></div>
+        <div class="prog-s" id="aps3"><div class="prog-dot">✓</div><div class="prog-lbl">Done</div></div>
+      </div>
+      <div class="auth-err" id="addp-err"></div>
+
+      <div id="apsc1">
+        <div class="auth-field"><label>Property title</label><input id="ap-title" placeholder="e.g. 3 Bed Apartment in Gulshan"/></div>
+        <div class="auth-row">
+          <div class="auth-field"><label>City</label><select id="ap-city" class="form-i"><option>Dhaka</option><option>Sylhet</option><option>Chattogram</option></select></div>
+          <div class="auth-field"><label>Area</label><input id="ap-area" placeholder="e.g. Gulshan"/></div>
+        </div>
+        <div class="auth-row">
+          <div class="auth-field"><label>Type</label><select id="ap-type" class="form-i"><option>Apartment</option><option>Duplex</option></select></div>
+          <div class="auth-field"><label>Monthly Rent (৳)</label><input id="ap-rent" inputmode="numeric" placeholder="45000"/></div>
+        </div>
+        <div class="auth-row">
+          <div class="auth-field"><label>Bedrooms</label><input id="ap-beds" inputmode="numeric" placeholder="3"/></div>
+          <div class="auth-field"><label>Bathrooms</label><input id="ap-baths" inputmode="numeric" placeholder="2"/></div>
+        </div>
+        <div class="auth-row">
+          <div class="auth-field"><label>Size (sqft)</label><input id="ap-sqft" inputmode="numeric" placeholder="1400"/></div>
+          <div class="auth-field"><label>Furnished</label><select id="ap-furn" class="form-i"><option>Unfurnished</option><option>Semi-Furnished</option><option>Fully Furnished</option></select></div>
+        </div>
+        <div class="auth-field"><label>Contact phone</label><input id="ap-phone" inputmode="numeric" placeholder="01XXXXXXXXX"/></div>
+        <button class="auth-submit" onclick="addpReview()">Review →</button>
+      </div>
+
+      <div id="apsc2" style="display:none">
+        <div id="addp-review" class="pbox" style="margin-bottom:16px"></div>
+        <div style="text-align:center;margin-bottom:12px"><span class="demo-label">🔒 Demo Mode — listing stored locally in this browser</span></div>
+        <button class="auth-submit" onclick="confirmAddProperty()">✅ Confirm &amp; Publish</button>
+        <button class="btn-back-sm" onclick="apStep(1)">← Back</button>
+      </div>
+
+      <div id="apsc3" style="display:none;text-align:center;padding:20px 0">
+        <div style="font-size:3rem;margin-bottom:10px">🎉</div>
+        <div style="font-family:var(--font-display);font-size:1.4rem;color:var(--white);margin-bottom:6px">Property Published!</div>
+        <div class="auth-note" style="margin-bottom:16px">Listing ID: <span id="addp-lid" style="color:var(--gold-d);font-weight:700"></span> · Status: Pending review</div>
+        <button class="auth-submit" onclick="addpDone()">Go to Dashboard →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="overlay" id="auth-ov" onclick="if(event.target===this)closeM('auth-ov')">
+  <div class="modal" style="max-width:480px">
+    <button class="modal-x" onclick="closeM('auth-ov')">✕</button>
+    <div style="padding:32px">
+      <div style="font-family:var(--font-display);font-size:1.5rem;font-weight:500;color:var(--white);margin-bottom:4px">আবা<span style="color:var(--gold)">সন</span> Account</div>
+      <div id="auth-ctx" class="auth-note" style="margin-bottom:18px"></div>
+
+      <div class="role-toggle" id="role-toggle">
+        <div class="role-opt buyer on" id="ro-buyer" onclick="setRole('buyer')">🛒 Buyer</div>
+        <div class="role-opt seller" id="ro-seller" onclick="setRole('seller')">🏷️ Seller</div>
+      </div>
+
+      <div class="auth-tabs">
+        <div class="auth-tab on" id="tab-login" onclick="setAuthMode('login')">Login</div>
+        <div class="auth-tab" id="tab-signup" onclick="setAuthMode('signup')">Sign up</div>
+      </div>
+
+      <div class="auth-err" id="auth-err"></div>
+
+      <!-- LOGIN -->
+      <div id="auth-login">
+        <div class="auth-field"><label>Username</label><input id="lg-user" placeholder="username" autocomplete="off"/></div>
+        <div class="auth-field"><label>Password</label><input id="lg-pass" type="password" placeholder="••••••••"/></div>
+        <button class="auth-submit" onclick="doLogin()">Login</button>
+      </div>
+
+      <!-- SIGNUP -->
+      <div id="auth-signup" style="display:none">
+        <div class="auth-field"><label>Full name</label><input id="su-name" placeholder="আপনার নাম"/></div>
+        <div class="auth-row">
+          <div class="auth-field"><label>Username</label><input id="su-user" placeholder="username"/></div>
+          <div class="auth-field"><label>Phone</label><input id="su-phone" placeholder="01XXXXXXXXX" inputmode="numeric"/></div>
+        </div>
+        <div class="auth-field"><label>NID number <span style="color:var(--white-30);font-weight:400;text-transform:none;letter-spacing:0"> · জাতীয় পরিচয়পত্র</span></label><input id="su-nid" placeholder="10, 13 or 17 digits" inputmode="numeric"/></div>
+        <div class="auth-field"><label id="su-loc-label">Home address</label><textarea id="su-loc" rows="2" placeholder="বাসা/এলাকার ঠিকানা"></textarea></div>
+        <div class="auth-field"><label>Password</label><input id="su-pass" type="password" placeholder="min 4 characters"/></div>
+        <button class="auth-submit" id="su-btn" onclick="doSignup()">Create account</button>
+        <div id="su-otp-wrap" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+          <div class="auth-field"><label>OTP code <span id="su-otp-hint" style="color:var(--gold-d);font-weight:700;text-transform:none;letter-spacing:0"></span></label><input id="su-otp" placeholder="6-digit code" inputmode="numeric" maxlength="6"/></div>
+          <button class="auth-submit" onclick="finishSignup()">Verify OTP &amp; Create Account</button>
+        </div>
+        <div class="auth-note">🔒 Demo only — data stays in your browser. NID is masked on display; real verification would be a separate KYC step, not stored client-side.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="overlay" id="pay-ov" onclick="if(event.target===this)closeM('pay-ov')">
+  <div class="modal" style="max-width:520px">
+    <button class="modal-x" onclick="closeM('pay-ov')">✕</button>
+    <div class="pay-header"><div class="pay-title">Book Property</div><div class="pay-sub" id="pay-pn"></div></div>
+    <div class="prog-steps">
+      <div class="prog-s on" id="ps1"><div class="prog-dot">১</div><div class="prog-lbl">Method</div></div>
+      <div class="prog-s" id="ps2"><div class="prog-dot">২</div><div class="prog-lbl">Details</div></div>
+      <div class="prog-s" id="ps3"><div class="prog-dot">✓</div><div class="prog-lbl">Confirm</div></div>
+    </div>
+    <div class="psc on" id="psc1">
+      <div class="amt-hero"><div style="font-size:.6875rem;color:var(--white-30);margin-bottom:4px;font-family:var(--font-ui);letter-spacing:.1em;text-transform:uppercase">Advance Booking (10%)</div><div class="amt-n" id="pay-amt"></div><div class="amt-label">Remaining rent paid on move-in day</div></div>
+      <div class="meths">
+        <div class="meth sel" onclick="selM(this)"><span class="meth-icon">📱</span><div><div class="meth-name">বিকাশ</div><div class="meth-sub">Mobile Banking</div></div><div class="meth-radio"></div></div>
+        <div class="meth" onclick="selM(this)"><span class="meth-icon">💚</span><div><div class="meth-name">নগদ</div><div class="meth-sub">Mobile Banking</div></div><div class="meth-radio"></div></div>
+        <div class="meth" onclick="selM(this)"><span class="meth-icon">🔵</span><div><div class="meth-name">রকেট</div><div class="meth-sub">DBBL</div></div><div class="meth-radio"></div></div>
+        <div class="meth" onclick="selM(this)"><span class="meth-icon">💳</span><div><div class="meth-name">Card</div><div class="meth-sub">Visa · Mastercard</div></div><div class="meth-radio"></div></div>
+      </div>
+      <button class="btn-pay ripple-container" onclick="gStep(2)"><span>Next →</span></button>
+    </div>
+    <div class="psc" id="psc2">
+      <div class="form-2col">
+        <div class="form-g"><label class="form-l">Move-in Date</label><input class="form-i" id="mv-dt" type="date"/></div>
+        <div class="form-g"><label class="form-l">Mobile</label><input class="form-i" type="tel" placeholder="01XXXXXXXXX"/></div>
+        <div class="form-g"><label class="form-l">Full Name</label><input class="form-i" type="text" placeholder="Your name"/></div>
+        <div class="form-g"><label class="form-l">Account No.</label><input class="form-i" id="pay-acc" type="text" placeholder="Wallet number 01…"/></div>
+      </div>
+      <div id="pay-card" style="display:none">
+        <div class="form-g" style="margin-bottom:10px"><label class="form-l">Card Number</label><input class="form-i" id="cc-num" inputmode="numeric" placeholder="4242 4242 4242 4242"/></div>
+        <div class="form-2col">
+          <div class="form-g"><label class="form-l">Expiry (MM/YY)</label><input class="form-i" id="cc-exp" placeholder="12/30"/></div>
+          <div class="form-g"><label class="form-l">CVV</label><input class="form-i" id="cc-cvv" inputmode="numeric" placeholder="123"/></div>
+        </div>
+      </div>
+      <div class="pbox">
+        <div class="pr-row"><span class="pr-l">Booking Amount</span><span class="pr-v hi" id="pc-amt"></span></div>
+        <div class="pr-row"><span class="pr-l">Service Charge</span><span class="pr-v">৳ 0</span></div>
+        <div class="pr-row"><span class="pr-l" style="font-weight:600;color:var(--white)">Total</span><span class="pr-v hi" id="pc-tot"></span></div>
+      </div>
+      <div style="text-align:center;margin-bottom:12px"><span class="demo-label">🔒 Demo Mode — No real transaction processed</span></div>
+      <button class="btn-pay ripple-container" id="pay-confirm-btn" onclick="confirmPay()"><span>✅ Confirm &amp; Pay</span></button>
+      <button class="btn-back-sm" onclick="gStep(1)">← Back</button>
+    </div>
+    <div class="psc" id="psc3">
+      <div class="success-screen">
+        <div class="succ-icon">🎉</div>
+        <div class="succ-title">Booking Successful!</div>
+        <p class="succ-desc">Your property is booked. The owner will contact you within 24 hours.</p>
+        <div class="ref-box">
+          <div class="ref-r"><span class="ref-l">Booking ID</span><span class="ref-v" id="ref-id"></span></div>
+          <div class="ref-r"><span class="ref-l">Transaction</span><span class="ref-v" id="ref-txn" style="font-size:.75rem"></span></div>
+          <div class="ref-r"><span class="ref-l">Amount Paid</span><span class="ref-v" id="ref-pd" style="color:var(--emerald-l)"></span></div>
+          <div class="ref-r"><span class="ref-l">Reserved For</span><span class="ref-v" id="ref-timer" style="color:var(--gold-d)">24:00:00</span></div>
+          <div class="ref-r"><span class="ref-l">Status</span><span class="ref-v" style="color:var(--emerald-l)">✅ Confirmed</span></div>
+        </div>
+        <div style="text-align:center;margin:0 0 14px"><span class="demo-label">🔒 Demo Mode — No real transaction processed</span></div>
+        <button class="btn-pay" onclick="closeM('pay-ov')">✓ Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="vid-ov" onclick="if(event.target===this)closeM('vid-ov')">
+  <div class="vid-modal-inner">
+    <button class="modal-x" style="background:rgba(28,38,33,.06);color:var(--white-60)" onclick="closeM('vid-ov')">✕</button>
+    <div class="vid-ph">
+      <div class="vid-play-btn" onclick="this.textContent='⏸'">▶</div>
+      <div class="vid-cap" id="vid-cap"></div>
+      <div style="font-family:var(--font-ui);font-size:.6875rem;color:var(--white-30)">(Prototype — real videos in live version)</div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="svc-ov" onclick="if(event.target===this)closeM('svc-ov')">
+  <div class="modal" style="max-width:480px">
+    <button class="modal-x" onclick="closeM('svc-ov')">✕</button>
+    <div class="sm-body">
+      <div style="font-family:var(--font-display);font-size:1.25rem;font-weight:500;color:var(--white);margin-bottom:4px" id="sm-t"></div>
+      <div style="font-family:var(--font-ui);font-size:.8125rem;color:var(--white-30);margin-bottom:20px" id="sm-d"></div>
+      <div class="sm-opts" id="sm-opts"></div>
+      <div class="form-2col" style="margin-bottom:16px">
+        <div class="form-g"><label class="form-l">Date</label><input class="form-i" type="date"/></div>
+        <div class="form-g"><label class="form-l">Mobile</label><input class="form-i" type="tel" placeholder="01XXXXXXXXX"/></div>
+        <div class="form-g"><label class="form-l">Pickup</label><input class="form-i" type="text" placeholder="Current address"/></div>
+        <div class="form-g"><label class="form-l">Drop</label><input class="form-i" type="text" placeholder="New address"/></div>
+      </div>
+      <button class="btn-pay ripple-container" onclick="closeM('svc-ov');setTimeout(()=>alert('Service booked! We will contact you within 24 hours.'),200)"><span>🚚 Book Service</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="int-ov" onclick="if(event.target===this)closeM('int-ov')">
+  <div class="modal" style="max-width:500px">
+    <button class="modal-x" onclick="closeM('int-ov')">✕</button>
+    <div class="im-body">
+      <div style="font-family:var(--font-display);font-size:1.25rem;font-weight:500;color:var(--white);margin-bottom:4px" id="im-n"></div>
+      <div style="font-family:var(--font-ui);font-size:.8125rem;color:var(--white-30);margin-bottom:16px" id="im-s"></div>
+      <div class="im-port" id="im-port"></div>
+      <div style="font-family:var(--font-ui);font-size:.8125rem;color:var(--white-30);line-height:1.6;margin-bottom:16px" id="im-dc"></div>
+      <div class="pbox" style="margin-bottom:16px">
+        <div class="pr-row"><span class="pr-l">Price Range</span><span class="pr-v hi" id="im-pr"></span></div>
+        <div class="pr-row"><span class="pr-l">Rating</span><span class="pr-v" id="im-rt"></span></div>
+      </div>
+      <button class="btn-pay" onclick="closeM('int-ov');setTimeout(()=>alert('Designer contacted! They will reach out soon.'),150)">🎨 Contact Designer</button>
+    </div>
+  </div>
+</div>
+
+<!-- FLOAT SUPPORT -->
+<div class="float-support">
+  <div class="float-panel" id="fl-p">
+    <div class="fp-title">How can we help?</div>
+    <div class="fp-opt" onclick="alert('Chat support coming soon!')"><div class="fp-ico" style="background:rgba(14,90,69,.2)">💬</div>Chat Support</div>
+    <div class="fp-opt" onclick="alert('Call: 16599')"><div class="fp-ico" style="background:rgba(212,175,55,.1)">📞</div>Call Us</div>
+    <div class="fp-opt" onclick="goPage('ai')"><div class="fp-ico" style="background:rgba(109,40,217,.15)">🤖</div>AI Assistant</div>
+  </div>
+  <button class="float-btn" onclick="document.getElementById('fl-p').classList.toggle('open')">💬</button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/authService.js"></script>
+<script src="js/propertyService.js"></script>   
+<script src="js/aiDB.js"></script>
+<script src="js/services.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
