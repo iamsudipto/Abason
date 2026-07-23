@@ -2,10 +2,24 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8"/>
+<meta name="referrer" content="strict-origin-when-cross-origin"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="আবাসন — বাংলাদেশের প্রথম AI হাউজিং ইকোসিস্টেম। যাচাইকৃত বাসা ভাড়া, ভিজিট বুকিং, ন্যায্য ভাড়ার হিসাব, শিফটিং ও ইন্টেরিয়র — সব এক প্ল্যাটফর্মে। ঢাকা, চট্টগ্রাম ও সিলেটে ৫০০+ লিস্টিং।"/>
+<meta name="theme-color" content="#0e5a45"/>
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="আবাসন | Abashon — বাসা খোঁজা থেকে শিফটিং, সব এক জায়গায়"/>
+<meta property="og:description" content="যাচাইকৃত বাসা ভাড়া, ভিজিট বুকিং, ন্যায্য ভাড়ার AI হিসাব, শিফটিং ও ইন্টেরিয়র — বাংলাদেশের সম্পূর্ণ হাউজিং প্ল্যাটফর্ম।"/>
+<meta property="og:locale" content="bn_BD"/>
+<meta name="twitter:card" content="summary"/>
+<link rel="icon" type="image/png" sizes="32x32" href="img/brand/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="img/brand/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="img/brand/apple-touch-icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <title>Abashon | আবাসন — Luxury Housing Ecosystem</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/style.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 </head>
 <body>
 <!-- CURSOR -->
@@ -14,27 +28,73 @@
 
 <!-- LOADER -->
 <div id="loader">
-  <div class="loader-logo">আবা<span>সন</span></div>
+  <div class="loader-logo"><img src="img/brand/icon.png" class="brand-mark" alt=""/>আবা<span>সন</span></div>
   <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
   <div class="loader-text">Bangladesh's First AI Housing Ecosystem</div>
 </div>
 
 <!-- NAV -->
 <nav id="navbar">
-  <div class="nav-logo" onclick="goPage('home')" style="cursor:pointer">আবা<span>সন</span></div>
+  <div class="nav-logo" onclick="goPage('home')" style="cursor:pointer"><img src="img/brand/icon.png" class="brand-mark" alt="Abashon"/>আবা<span>সন</span></div>
   <ul class="nav-links">
-    <li><a data-p="home" onclick="goPage('home')">হোম</a></li>
-    <li><a data-p="listings" onclick="goPage('listings')">Properties</a></li>
-    <li><a data-p="ai" onclick="goPage('ai')">AI Assistant</a></li>
-    <li><a data-p="shifting" onclick="goPage('shifting')">Shifting</a></li>
-    <li><a data-p="interior" onclick="goPage('interior')">Interior</a></li>
-    <li><a data-p="about" onclick="goPage('about')">About</a></li>
+    <li><a href="#/home" data-p="home" onclick="goPage('home')">হোম</a></li>
+    <li><a href="#/listings" data-p="listings" onclick="filterTypeGo('RENT')">Rent</a></li>
+    <li><a href="#/ai" data-p="ai" onclick="goPage('ai')">AI Home Finder</a></li>
+    <li class="nav-drop" tabindex="0" aria-haspopup="true" aria-label="Services মেনু">
+      <span class="nav-drop-label">Services ▾</span>
+      <ul class="nav-drop-menu" role="menu">
+        <li role="none"><a role="menuitem" href="#/map" data-p="map" onclick="goPage('map')">🗺️ Map</a></li>
+        <li role="none"><a role="menuitem" href="#/shifting" data-p="shifting" onclick="goPage('shifting')">🚚 Shifting</a></li>
+        <li role="none"><a role="menuitem" href="#/furniture" data-p="furniture" onclick="goPage('furniture')">🛋️ Furniture</a></li>
+        <li role="none"><a role="menuitem" href="#/interior" data-p="interior" onclick="goPage('interior')">🎨 Interior</a></li>
+      </ul>
+    </li>
+    <li><a href="#/about" data-p="about" onclick="goPage('about')">About</a></li>
   </ul>
+  <button id="nav-hamburger" onclick="toggleMobileNav()" aria-label="Menu খুলুন" aria-expanded="false" aria-controls="mobile-nav-drawer" style="display:none;background:none;border:none;color:var(--white);font-size:1.5rem;cursor:pointer;padding:4px 8px;line-height:1">☰</button>
   <div style="display:flex;gap:10px;align-items:center">
+    <div class="nav-icon-group">
+      <button class="nav-icon-btn nav-icon-btn--sos" onclick="openEmergencyInfo()" title="জরুরি সাহায্য" aria-label="জরুরি সাহায্য">🆘</button>
+      <div id="notif-bell-wrap" style="display:none;position:relative">
+        <button id="notif-bell-btn" class="nav-icon-btn" onclick="notifToggle()" aria-label="Notifications">
+          🔔<span id="notif-badge" class="notif-badge-dot"></span>
+        </button>
+        <div id="notif-panel" class="notif-panel"></div>
+      </div>
+    </div>
     <button id="nav-explore" class="nav-cta ripple-container" onclick="goPage('listings')"><span>Explore Homes</span></button>
     <button id="nav-addprop" class="nav-cta ripple-container" style="display:none" onclick="openAddProperty()"><span>＋ Add Property</span></button>
     <span id="nav-auth" style="display:flex;gap:10px;align-items:center"></span>
   </div>
+</nav>
+
+<!-- MOBILE NAV DRAWER — শুধু ১১০০px-এর নিচে ব্যবহার হয়; ৭টা nav-link-এর হুবহু কপি, hamburger থেকে টগল হয় -->
+<div id="mobile-nav-overlay" onclick="closeMobileNav()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:998"></div>
+<div id="mobile-nav-drawer" role="dialog" aria-modal="true" aria-label="Navigation menu" style="display:none;position:fixed;top:0;right:0;bottom:0;width:min(78vw,320px);background:var(--bg);z-index:999;box-shadow:-8px 0 32px rgba(0,0,0,.25);padding:24px 20px;overflow-y:auto">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+    <div class="nav-logo"><img src="img/brand/icon.png" class="brand-mark" alt="Abashon"/>আবা<span>সন</span></div>
+    <button onclick="closeMobileNav()" aria-label="Menu বন্ধ করুন" style="background:none;border:none;color:var(--white);font-size:1.4rem;cursor:pointer;padding:4px 8px">✕</button>
+  </div>
+  <ul style="list-style:none;display:flex;flex-direction:column;gap:4px">
+    <li><a onclick="goPage('home');closeMobileNav()" style="display:block;padding:14px 8px;font-family:var(--font-ui);font-size:.95rem;color:var(--white);border-bottom:1px solid var(--border);cursor:pointer">হোম</a></li>
+    <li><a onclick="goPage('listings');closeMobileNav()" style="display:block;padding:14px 8px;font-family:var(--font-ui);font-size:.95rem;color:var(--white);border-bottom:1px solid var(--border);cursor:pointer">Properties</a></li>
+    <li><a onclick="goPage('map');closeMobileNav()" style="display:block;padding:14px 8px;font-family:var(--font-ui);font-size:.95rem;color:var(--white);border-bottom:1px solid var(--border);cursor:pointer">Map</a></li>
+    <li><a onclick="goPage('ai');closeMobileNav()" style="display:block;padding:14px 8px;font-family:var(--font-ui);font-size:.95rem;color:var(--white);border-bottom:1px solid var(--border);cursor:pointer">AI Assistant</a></li>
+    <li><a onclick="goPage('shifting');closeMobileNav()" style="display:block;padding:14px 8px;font-family:var(--font-ui);font-size:.95rem;color:var(--white);border-bottom:1px solid var(--border);cursor:pointer">Shifting</a></li>
+    <li><a onclick="goPage('interior');closeMobileNav()" style="display:block;padding:14px 8px;font-family:var(--font-ui);font-size:.95rem;color:var(--white);border-bottom:1px solid var(--border);cursor:pointer">Interior</a></li>
+    <li><a onclick="goPage('furniture');closeMobileNav()" style="display:block;padding:14px 8px;font-family:var(--font-ui);font-size:.95rem;color:var(--white);border-bottom:1px solid var(--border);cursor:pointer">Furniture</a></li>
+    <li><a onclick="goPage('about');closeMobileNav()" style="display:block;padding:14px 8px;font-family:var(--font-ui);font-size:.95rem;color:var(--white);border-bottom:1px solid var(--border);cursor:pointer">About</a></li>
+  </ul>
+</div>
+
+<!-- MOBILE BOTTOM TAB-BAR — <768px, one-handed navigation (Phase 6 — নতুন যোগ, drawer সরানো হয়নি,
+     এটা পরিপূরক শর্টকাট)। active-state setActiveNav()-এর data-p ম্যাচিং পুনর্ব্যবহার করে। -->
+<nav id="mobile-bottom-nav" aria-label="প্রধান মোবাইল নেভিগেশন">
+  <a href="#/home" data-p="home" onclick="goPage('home')"><span aria-hidden="true">🏠</span><small>হোম</small></a>
+  <a href="#/listings" data-p="listings" onclick="goPage('listings')"><span aria-hidden="true">🔍</span><small>Search</small></a>
+  <a href="#/ai" data-p="ai" onclick="goPage('ai')" class="mbn-ai"><span aria-hidden="true">🤖</span><small>AI</small></a>
+  <a href="#" onclick="event.preventDefault();goPage('dashboard');if(typeof buyerSetTab==='function')buyerSetTab('saved');"><span aria-hidden="true">❤️</span><small>Saved</small></a>
+  <a href="#" onclick="event.preventDefault();goPage('dashboard')"><span aria-hidden="true">👤</span><small>Profile</small></a>
 </nav>
 
 <!-- ═══ HOME PAGE ═══ -->
@@ -50,9 +110,26 @@
       <div class="hero-eyebrow">Bangladesh's First AI-Powered Housing Ecosystem</div>
       <h1 class="hero-h1">Find Your <em>Dream Home</em><br/>With AI Precision</h1>
       <p class="hero-sub">বাসা ভাড়া, কেনা-বেচা, শিফটিং, ইন্টেরিয়র ডিজাইন — সবকিছু এক জায়গায়। Search → Select → Book → Move → Settle.</p>
+
+      <!-- SMART SEARCH — natural language, বাংলা/English/Banglish (Phase 7 — master-prompt Section 8) -->
+      <div class="hero-search-wrap">
+        <div class="hero-search-box">
+          <span class="hero-search-ico" aria-hidden="true">🔍</span>
+          <input id="hero-search-inp" class="hero-search-inp" type="text"
+                 placeholder="আপনার পছন্দের বাসা বর্ণনা করুন... (যেমন: গুলশানে ৩০ হাজারের মধ্যে ২ বেড বাসা)"
+                 aria-label="বাসা খুঁজুন — বাংলা বা English-এ লিখুন"
+                 onkeydown="if(event.key==='Enter')heroSearchGo()"/>
+          <button class="hero-search-btn" onclick="heroSearchGo()">খুঁজুন</button>
+        </div>
+        <div class="hero-search-chips">
+          <button class="hero-chip" onclick="heroSearchGo('৩ বেড ফ্যামিলি বাসা ৩০ হাজারের মধ্যে ধানমন্ডিতে')">৩ বেড, ধানমন্ডি, ৩০k বাজেট</button>
+          <button class="hero-chip" onclick="heroSearchGo('bachelor bhara bosha SUST er kache')">SUST-এর কাছে ব্যাচেলর বাসা</button>
+          <button class="hero-chip" onclick="heroSearchGo('parking shoho 2 bed flat')">পার্কিং সহ ২ বেড ফ্ল্যাট</button>
+        </div>
+      </div>
+
       <div class="hero-actions">
-        <button class="btn-primary ripple-container" onclick="goPage('listings')"><span>🔍 Explore Properties</span></button>
-        <button class="btn-outline" onclick="goPage('ai')">🤖 Try AI Assistant</button>
+        <button class="btn-primary ripple-container" onclick="filterTypeGo('RENT')"><span>🏠 Find a Home</span></button>
       </div>
     </div>
     <div class="hero-stats">
@@ -210,20 +287,13 @@
         </div>
         <div class="est-card reveal reveal-delay-2">
           <div class="est-card-title">🚛 Shifting Cost Calculator</div>
-          <div class="est-card-sub">লোকেশন ও মালামাল দিন — খরচ জানুন</div>
-          <div class="est-form">
-            <div class="est-field"><label class="est-label">Pickup Location</label><select class="est-select" id="sc-from"><option>গুলশান, ঢাকা</option><option>ধানমন্ডি, ঢাকা</option><option>মিরপুর, ঢাকা</option><option>শাহজালালপুর, সিলেট</option><option>খুলশী, চট্টগ্রাম</option></select></div>
-            <div class="est-field"><label class="est-label">Drop Location</label><select class="est-select" id="sc-to"><option>উত্তরা, ঢাকা</option><option>বনানী, ঢাকা</option><option>আম্বরখানা, সিলেট</option><option>আগ্রাবাদ, চট্টগ্রাম</option></select></div>
-            <div class="est-row">
-              <div class="est-field"><label class="est-label">Load Size</label><select class="est-select" id="sc-load"><option value="small">ছোট (১ রুম)</option><option value="medium">মাঝারি (২-৩ রুম)</option><option value="large">বড় (৪+ রুম)</option></select></div>
-              <div class="est-field"><label class="est-label">Labor</label><select class="est-select" id="sc-labor"><option value="no">না</option><option value="yes">২ জন</option><option value="yes4">৪ জন</option></select></div>
+          <div class="est-card-sub">দূরত্ব, মাল ও তলা ধরে আসল হিসাব — flat rate না</div>
+          <div style="padding:28px 8px 8px;text-align:center">
+            <div style="font-size:2.25rem;margin-bottom:10px">🚚</div>
+            <div style="font-family:var(--font-ui);font-size:.8125rem;color:var(--white-30);margin-bottom:20px;line-height:1.6">
+              ম্যাপে লোকেশন বেছে, তলা-লিফট-মাল দিয়ে পুরো ভাঙানো হিসাব পাবে
             </div>
-            <button class="est-btn ripple-container" onclick="calcShift()">🚛 <span>Calculate Cost</span></button>
-          </div>
-          <div class="est-result" id="sc-res">
-            <div class="est-result-label">Estimated Cost</div>
-            <div class="est-result-price" id="sc-p"></div>
-            <div class="est-result-range" id="sc-n"></div>
+            <button class="est-btn ripple-container" onclick="goPage('shifting')" style="width:auto;padding:12px 28px;display:inline-flex">🚛 <span>খরচ হিসাব করো</span></button>
           </div>
         </div>
       </div>
@@ -258,15 +328,15 @@
   <footer>
     <div class="foot-grid">
       <div>
-        <div class="foot-brand-name">আবা<span>সন</span></div>
+        <div class="foot-brand-name"><img src="img/brand/icon.png" class="brand-mark" alt="Abashon"/>আবা<span>সন</span></div>
         <p class="foot-desc">বাংলাদেশের প্রথম AI-Powered অল-ইন-ওয়ান হাউজিং ইকোসিস্টেম। বাসা খোঁজা থেকে উঠে পড়া পর্যন্ত।</p>
         <div class="foot-badges"><span class="foot-badge">AI Powered</span><span class="foot-badge">SSL Secured</span><span class="foot-badge">bKash</span><span class="foot-badge">Nagad</span></div>
       </div>
-      <div class="foot-col"><h4>Services</h4><a onclick="goPage('listings')">Rent Home</a><a onclick="goPage('listings')">Buy Home</a><a onclick="goPage('shifting')">Shifting</a><a onclick="goPage('interior')">Interior</a><a onclick="goPage('furniture')">Furniture</a></div>
+      <div class="foot-col"><h4>Services</h4><a onclick="goPage('listings')">Rent Home</a><a onclick="goPage('shifting')">Shifting</a><a onclick="goPage('interior')">Interior</a><a onclick="goPage('furniture')">Furniture</a></div>
       <div class="foot-col"><h4>Cities</h4><a onclick="filterCityGo('ঢাকা')">Dhaka</a><a onclick="filterCityGo('সিলেট')">Sylhet</a><a onclick="filterCityGo('চট্টগ্রাম')">Chattogram</a></div>
       <div class="foot-col"><h4>Contact</h4><a href="#">📞 16599</a><a href="#">✉️ hello@abashon.com.bd</a><a href="#">📍 Dhaka, Bangladesh</a></div>
     </div>
-    <div class="foot-bottom"><span>© 2025 Abashon. All rights reserved.</span><span>Privacy · Terms</span></div>
+    <div class="foot-bottom"><span>© 2025 Abashon. All rights reserved.</span><span><a href="privacy.html" style="color:inherit;text-decoration:underline">Privacy</a> · <a href="terms.html" style="color:inherit;text-decoration:underline">Terms</a></span></div>
   </footer>
 </div>
 
@@ -284,13 +354,93 @@
       <button class="filter-btn" onclick="fPill(this,'চট্টগ্রাম')">Chattogram</button>
       <button class="filter-btn" onclick="fPill(this,'RENT')">Rent</button>
       <button class="filter-btn" onclick="fPill(this,'SALE')">Sale</button>
+      <button class="filter-btn" id="adv-filter-toggle" onclick="toggleAdvFilters()" aria-expanded="false" aria-controls="adv-filter-panel">⚙️ আরো ফিল্টার</button>
       <select class="filter-sort" onchange="sortP(this.value)">
         <option value="def">Recommended</option>
         <option value="low">Lowest Price</option>
         <option value="high">Highest Price</option>
       </select>
+      <button class="filter-btn" onclick="saveListingSearch()">🔍 এই সার্চ Save করো</button>
     </div>
+
+    <!-- ADVANCED FILTERS — progressive disclosure, ডিফল্টে বন্ধ (Phase 8 — master-prompt Section 10) -->
+    <div id="adv-filter-panel" class="adv-filter-panel" hidden>
+      <div class="adv-filter-grid">
+        <div class="adv-f-group">
+          <label class="adv-f-label">বাজেট (৳/মাস)</label>
+          <div class="adv-f-row"><input type="number" id="af-budmin" placeholder="সর্বনিম্ন" class="form-i"/><span>–</span><input type="number" id="af-budmax" placeholder="সর্বোচ্চ" class="form-i"/></div>
+        </div>
+        <div class="adv-f-group">
+          <label class="adv-f-label">বেডরুম</label>
+          <div class="adv-f-pills" id="af-beds-pills">
+            <button data-v="1" onclick="afPickBeds(this)">১</button><button data-v="2" onclick="afPickBeds(this)">২</button>
+            <button data-v="3" onclick="afPickBeds(this)">৩</button><button data-v="4" onclick="afPickBeds(this)">৪+</button>
+          </div>
+        </div>
+        <div class="adv-f-group">
+          <label class="adv-f-label">ফার্নিশিং</label>
+          <select id="af-furnished" class="form-i" onchange="applyAllFilters()">
+            <option value="">যেকোনো</option><option value="Fully Furnished">Fully Furnished</option>
+            <option value="Semi-Furnished">Semi-Furnished</option><option value="Unfurnished">Unfurnished</option>
+          </select>
+        </div>
+        <div class="adv-f-group">
+          <label class="adv-f-label">ভাড়াটিয়া ধরন</label>
+          <select id="af-tenant" class="form-i" onchange="applyAllFilters()">
+            <option value="">যেকোনো</option><option value="Family">Family</option><option value="Small Family">Small Family</option>
+            <option value="Bachelor">Bachelor</option><option value="Female Bachelor">Female Bachelor</option>
+          </select>
+        </div>
+        <div class="adv-f-group adv-f-check">
+          <label><input type="checkbox" id="af-parking" onchange="applyAllFilters()"/> পার্কিং</label>
+          <label><input type="checkbox" id="af-am-Lift" onchange="applyAllFilters()"/> লিফট</label>
+          <label><input type="checkbox" id="af-am-Generator" onchange="applyAllFilters()"/> জেনারেটর</label>
+          <label><input type="checkbox" id="af-am-Security" onchange="applyAllFilters()"/> সিকিউরিটি</label>
+          <label><input type="checkbox" id="af-am-Gas" onchange="applyAllFilters()"/> গ্যাস</label>
+        </div>
+      </div>
+      <div class="adv-f-actions">
+        <button class="btn-outline" onclick="clearAdvFilters()">সব মুছুন</button>
+        <button class="btn-primary" onclick="applyAllFilters()"><span>প্রয়োগ করুন</span></button>
+      </div>
+    </div>
+
+    <!-- ACTIVE FILTER CHIPS — সবসময় দৃশ্যমান, প্রতিটা আলাদাভাবে সরানো যায় (master-prompt: "always show active filters clearly") -->
+    <div id="active-filter-chips" class="active-filter-chips"></div>
+
     <div class="prop-grid" id="pgrid"></div>
+  </div>
+</div>
+
+<!-- MAP PAGE -->
+<div class="page" id="page-map">
+  <div style="padding:120px 24px 0;max-width:1280px;margin:0 auto">
+    <div class="section-eyebrow">Map Search</div>
+    <div class="section-title" style="margin-bottom:20px">খুঁজুন <em>মানচিত্রে</em></div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px">
+      <div style="position:relative;flex:1;min-width:200px;max-width:280px">
+        <input id="map-area-search" list="map-area-list" placeholder="🔍 এলাকা লিখো (যেমন: গুলশান, ধানমন্ডি)" oninput="mapAreaSearchInput()" onchange="mapAreaSearchGo()" onkeydown="if(event.key==='Enter')mapAreaSearchGo()" style="width:100%;padding:9px 14px;background:var(--glass);border:1px solid var(--border);border-radius:8px;color:var(--white);font-family:var(--font-ui);font-size:.85rem"/>
+        <datalist id="map-area-list"></datalist>
+      </div>
+      <button class="filter-btn active" id="map-near-btn" onclick="mapFindNearMe()">📍 আমার আশেপাশে</button>
+      <div style="display:flex;align-items:center;gap:8px;font-family:var(--font-ui);font-size:.85rem;color:var(--white-60)">
+        <span>দূরত্ব</span>
+        <input type="range" id="map-radius" min="0.5" max="10" step="0.5" value="2" oninput="mapRadiusLabel()" onchange="mapRunSearch()" style="accent-color:var(--emerald);width:120px">
+        <span id="map-radius-val" style="font-weight:600;color:var(--emerald)">২ কিমি</span>
+      </div>
+      <span id="map-status" style="font-family:var(--font-ui);font-size:.8rem;color:var(--white-60)">ম্যাপে ট্যাপ করে, এলাকার নাম লিখে, বা "আমার আশেপাশে" চেপে শুরু করো</span>
+    </div>
+  </div>
+  <div style="position:relative">
+    <div id="propMap" style="height:60vh;width:100%;margin-top:4px"></div>
+    <button onclick="mapFindNearMe()" title="আমার অবস্থান" aria-label="আমার অবস্থান দেখাও" style="position:absolute;bottom:20px;right:16px;z-index:400;width:44px;height:44px;border-radius:50%;background:#fff;border:none;box-shadow:0 2px 10px rgba(0,0,0,.3);cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center">🎯</button>
+    <div style="position:absolute;top:12px;right:12px;z-index:400;background:rgba(255,255,255,.92);border-radius:8px;padding:8px 12px;font-family:var(--font-ui);font-size:.72rem;color:#333;box-shadow:0 2px 8px rgba(0,0,0,.2);display:flex;flex-direction:column;gap:4px">
+      <div style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#D8342A;display:inline-block"></span> বাসা</div>
+      <div style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:#2563EB;display:inline-block"></span> তোমার অবস্থান</div>
+    </div>
+  </div>
+  <div style="padding:24px;max-width:1280px;margin:0 auto 80px">
+    <div class="prop-grid" id="map-results"></div>
   </div>
 </div>
 
@@ -305,6 +455,7 @@
         <input id="ai-fi" style="flex:1;padding:10px 16px;background:var(--glass);border:1px solid var(--border);border-radius:100px;color:var(--white);font-family:var(--font-ui);font-size:.8125rem;outline:none" placeholder="বাসার ধরন, এলাকা, বাজেট..." onkeydown="if(event.key==='Enter')fullAI()"/>
         <button onclick="fullAI()" style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--emerald),var(--emerald-l));color:var(--ink-white);font-weight:700;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:none;cursor:pointer">→</button>
       </div>
+      <div onclick="const q=document.getElementById('ai-fi').value.trim();if(q)saveCurrentSearch(q,null,null);else toast('আগে কিছু লিখে সার্চ করো','err')" style="margin-top:8px;font-family:var(--font-ui);font-size:.72rem;color:var(--white-30);cursor:pointer;text-decoration:underline">🔍 এই সার্চ Save করো</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
         <button class="ai-quick" onclick="aiQ('গুলশানে ২ BHK ৩০-৪০ হাজার লিফট লাগবে')">গুলশান ২ BHK</button>
         <button class="ai-quick" onclick="aiQ('সিলেটে ১৫ হাজারের মধ্যে')">সিলেট বাজেট</button>
@@ -312,6 +463,8 @@
         <button class="ai-quick" onclick="aiQ('ব্যাচেলরের জন্য ছোট স্টুডিও')">ব্যাচেলর</button>
         <button class="ai-quick" onclick="aiQ('৪ BHK প্রিমিয়াম ফ্ল্যাট')">প্রিমিয়াম</button>
       </div>
+      <!-- Phase 10 — AI যা মনে রেখেছে তার স্বচ্ছ প্রদর্শন (master-prompt Section 18) -->
+      <div id="ai-profile-chips" style="margin-top:16px"></div>
     </div>
     <div style="padding:100px 48px 48px;overflow-y:auto;background:var(--bg-2)">
       <div id="ai-res-hd" style="margin-bottom:32px">
@@ -338,18 +491,45 @@
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-bottom:48px">
       <div class="est-card">
-        <div class="est-card-title">AI Cost Calculator</div>
-        <div class="est-card-sub">লোকেশন ও মালামাল দিন</div>
-        <div class="est-form">
-          <div class="est-field"><label class="est-label">Pickup</label><select class="est-select" id="sc2-from"><option>গুলশান, ঢাকা</option><option>ধানমন্ডি, ঢাকা</option><option>মিরপুর, ঢাকা</option><option>শাহজালালপুর, সিলেট</option><option>খুলশী, চট্টগ্রাম</option></select></div>
-          <div class="est-field"><label class="est-label">Drop</label><select class="est-select" id="sc2-to"><option>উত্তরা, ঢাকা</option><option>বনানী, ঢাকা</option><option>আম্বরখানা, সিলেট</option><option>আগ্রাবাদ, চট্টগ্রাম</option></select></div>
-          <div class="est-row">
-            <div class="est-field"><label class="est-label">Load</label><select class="est-select" id="sc2-load"><option value="small">ছোট</option><option value="medium">মাঝারি</option><option value="large">বড়</option></select></div>
-            <div class="est-field"><label class="est-label">Labor</label><select class="est-select" id="sc2-labor"><option value="no">না</option><option value="yes">২ জন</option><option value="yes4">৪ জন</option></select></div>
-          </div>
-          <button class="est-btn" onclick="calcShift2()">🚛 Calculate</button>
+        <div class="est-card-title">ন্যায্য শিফটিং খরচ</div>
+        <div class="est-card-sub">দূরত্ব, মাল, তলা ও এলাকা ধরে হিসাব — flat rate না</div>
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <button class="est-btn" id="sf-from-btn" onclick="sfSetActive('from')" style="background:rgba(14,90,69,.15);color:var(--emerald-l);flex-direction:column;gap:2px;text-transform:none;letter-spacing:0;font-weight:400">যেখান থেকে<b id="sf-from-txt" style="font-family:var(--font-display);font-weight:500">—</b></button>
+          <button class="est-btn" id="sf-to-btn" onclick="sfSetActive('to')" style="background:rgba(166,124,26,.12);color:var(--gold-l);flex-direction:column;gap:2px;text-transform:none;letter-spacing:0;font-weight:400">যেখানে<b id="sf-to-txt" style="font-family:var(--font-display);font-weight:500">—</b></button>
         </div>
-        <div class="est-result" id="sc2-res"><div class="est-result-label">Estimated Cost</div><div class="est-result-price" id="sc2-p"></div><div class="est-result-range" id="sc2-n"></div></div>
+        <div id="shiftMap" style="height:190px;border-radius:var(--r-md);margin-bottom:12px;border:1px solid var(--border)"></div>
+        <div class="est-form">
+          <div class="est-row">
+            <div class="est-field"><label class="est-label">দ্রুত বাছাই — থেকে</label><select class="est-select" id="sf-q-from"></select></div>
+            <div class="est-field"><label class="est-label">দ্রুত বাছাই — যেখানে</label><select class="est-select" id="sf-q-to"></select></div>
+          </div>
+          <div class="est-row">
+            <div class="est-field"><label class="est-label">মালপত্র</label><select class="est-select" id="sf-load"><option value="small">অল্প</option><option value="medium" selected>মাঝারি</option><option value="large">পুরো বাসা</option></select></div>
+            <div class="est-field"><label class="est-label">শ্রমিক</label><select class="est-select" id="sf-workers"><option value="0">লাগবে না</option><option value="2" selected>২ জন</option><option value="4">৪ জন</option></select></div>
+          </div>
+          <div class="est-row">
+            <div class="est-field"><label class="est-label">বর্তমান তলা</label><select class="est-select" id="sf-ff"></select></div>
+            <div class="est-field"><label class="est-label">নতুন তলা</label><select class="est-select" id="sf-tf"></select></div>
+          </div>
+          <div class="est-row">
+            <div class="est-field" style="flex-direction:row;align-items:center;gap:7px"><input type="checkbox" id="sf-fl" style="width:auto"/><span class="est-label" style="text-transform:none;letter-spacing:0;font-size:.75rem">বর্তমান বাসায় লিফট</span></div>
+            <div class="est-field" style="flex-direction:row;align-items:center;gap:7px"><input type="checkbox" id="sf-tl" style="width:auto"/><span class="est-label" style="text-transform:none;letter-spacing:0;font-size:.75rem">নতুন বাসায় লিফট</span></div>
+          </div>
+          <div class="est-field" style="flex-direction:row;align-items:center;gap:7px"><input type="checkbox" id="sf-pack" style="width:auto"/><span class="est-label" style="text-transform:none;letter-spacing:0;font-size:.75rem">প্যাকিং সেবা লাগবে</span></div>
+          <button class="est-btn ripple-container" onclick="sfCalculate()">🚛 <span>হিসাব করো</span></button>
+        </div>
+        <div class="est-result" id="sf-res"></div>
+        <div id="sf-order-panel" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+          <div class="est-card-title" style="font-size:1rem">অর্ডার করো</div>
+          <div class="est-card-sub">আমাদের নিজস্ব টিম — admin অর্ডার দেখে নিশ্চিত করবে</div>
+          <div class="est-form">
+            <div class="est-field"><label class="est-label">কবে যাবে</label><input class="est-input" type="date" id="sf-date"/></div>
+            <div class="est-field"><label class="est-label">বিকাশ/নগদ নম্বর (টোকেন পেমেন্টের জন্য)</label><input class="est-input" id="sf-pay-phone" placeholder="01XXXXXXXXX" inputmode="numeric"/></div>
+            <div class="est-field"><label class="est-label">বার্তা (ঐচ্ছিক)</label><input class="est-input" id="sf-note" placeholder="যেমন: সকালে যেতে চাই"/></div>
+            <div id="sf-token-note" style="font-family:var(--font-ui);font-size:.75rem;color:var(--white-30)"></div>
+            <button class="est-btn ripple-container" id="sf-order-btn" onclick="sfSubmitOrder()">🚚 <span>টোকেন দিয়ে অর্ডার দাও</span></button>
+          </div>
+        </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:16px;justify-content:center">
         <div style="padding:24px;background:var(--glass);border:1px solid var(--border);border-radius:16px">
@@ -368,6 +548,30 @@
     </div>
     <div class="section-eyebrow" style="margin-bottom:24px">Our Services</div>
     <div class="svc-grid" id="svc-grid"></div>
+
+    <!-- ═══ Moving Checklist + Inventory/Packing Planner (localStorage, per-device) ═══ -->
+    <div class="section-eyebrow" style="margin:56px 0 24px">Plan Your Move</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+      <div class="est-card">
+        <div class="est-card-title">✅ Moving Day Checklist</div>
+        <div class="est-card-sub">যা করতে ভুলবে না — টিক দিয়ে রাখো</div>
+        <div id="mv-checklist-box"></div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <input class="est-input" id="mv-cl-new" placeholder="নতুন কাজ যোগ করো..." style="flex:1"/>
+          <button class="est-btn ripple-container" style="width:auto;padding:10px 16px" onclick="mvAddChecklistItem()">＋</button>
+        </div>
+      </div>
+      <div class="est-card">
+        <div class="est-card-title">📦 Inventory / Packing Planner</div>
+        <div class="est-card-sub">কোন জিনিস কোন বাক্সে, প্যাক হয়েছে কিনা — ট্র্যাক রাখো</div>
+        <div id="mv-inventory-box"></div>
+        <div class="est-row" style="margin-top:12px">
+          <input class="est-input" id="mv-inv-item" placeholder="জিনিসের নাম (যেমন: বই, থালাবাসন)"/>
+          <input class="est-input" id="mv-inv-room" placeholder="ঘর (যেমন: বেডরুম)" style="max-width:120px"/>
+        </div>
+        <button class="est-btn ripple-container" style="margin-top:8px" onclick="mvAddInventoryItem()">＋ যোগ করো</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -445,45 +649,82 @@
   </div>
 </div>
 
+<!-- TOOLS PAGE -->
+
 <!-- DASHBOARD PAGE -->
 <div class="page" id="page-dashboard">
   <div style="padding:100px 64px 80px">
-    <div id="dash-buyer">
-    <div class="dash-grid" style="max-width:1280px;margin:0 auto">
-      <div class="dash-side">
-        <div class="dash-user-av" id="db-av">স</div>
-        <div class="dash-user-name" id="db-nm">সুদীপ্ত</div>
-        <div style="text-align:center;margin:6px 0 4px"><span class="role-badge buyer">🛒 Buyer</span></div>
-        <div class="dash-user-email" id="db-em">user@abashon.com.bd</div>
-        <div class="dash-menu">
-          <div class="dm active">📊 Overview</div>
-          <div class="dm">🏠 Saved Homes</div>
-          <div class="dm">📅 Bookings</div>
-          <div class="dm">💳 Payments</div>
-          <div class="dm">🚚 Shifting</div>
-          <div class="dm">🔔 Alerts</div>
-        </div>
-      </div>
-      <div class="dash-content">
-        <div class="stat-row">
-          <div class="stat-c"><div class="stat-n"><span class="counter" data-target="3">0</span></div><div class="stat-l">Saved Homes</div></div>
-          <div class="stat-c"><div class="stat-n"><span class="counter" data-target="1">0</span></div><div class="stat-l">Active Booking</div></div>
-          <div class="stat-c"><div class="stat-n">৳4,500</div><div class="stat-l">Total Paid</div></div>
-          <div class="stat-c"><div class="stat-n"><span class="counter" data-target="2">0</span></div><div class="stat-l">Shifting Orders</div></div>
-        </div>
-        <div class="dash-card">
-          <div class="dash-card-title">📅 Recent Bookings</div>
-          <div class="bk-item"><img class="bk-img" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=100&h=80&fit=crop"/><div style="flex:1"><div class="bk-t">৩ BHK Apartment, Gulshan</div><div class="bk-l">📍 Gulshan 2, Dhaka · ৳45,000/mo</div></div><div class="bk-st ok">Confirmed</div></div>
-          <div class="bk-item"><img class="bk-img" src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=100&h=80&fit=crop"/><div style="flex:1"><div class="bk-t">২ BHK House, Shahjalal</div><div class="bk-l">📍 Shahjalal, Sylhet · ৳18,000/mo</div></div><div class="bk-st pend">Pending</div></div>
-        </div>
-        <div class="dash-card">
-          <div class="dash-card-title">❤️ Saved Homes</div>
-          <div class="prop-grid" id="saved-grid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))"></div>
-        </div>
-      </div>
-    </div>
-    </div>
+    <div id="dash-buyer" style="max-width:1280px;margin:0 auto"></div>
     <div id="dash-seller" style="display:none;max-width:1280px;margin:0 auto"></div>
+  </div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div class="page" id="page-admin">
+  <div style="padding:120px 24px 80px;max-width:1100px;margin:0 auto">
+    <div class="section-eyebrow">Admin</div>
+    <div class="section-title" style="margin-bottom:28px">Moderation <em>Dashboard</em></div>
+    <div id="admin-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:32px"></div>
+    <div class="filter-bar" style="margin-bottom:20px">
+      <button class="filter-btn active" id="admin-tab-pending" onclick="adminSetTab('pending')">Pending Listings</button>
+      <button class="filter-btn" id="admin-tab-all" onclick="adminSetTab('all')">All Listings</button>
+      <button class="filter-btn" id="admin-tab-tickets" onclick="adminSetTab('tickets')">Support Tickets</button>
+      <button class="filter-btn" id="admin-tab-reports" onclick="adminSetTab('reports')">🚩 Reports</button>
+      <button class="filter-btn" id="admin-tab-knowledge" onclick="adminSetTab('knowledge')">📚 Knowledge</button>
+      <button class="filter-btn" id="admin-rag-btn" onclick="adminRagIngest()" title="RAG index: property + knowledge embeddings রিফ্রেশ">🧠 AI Index</button>
+      <button class="filter-btn" id="admin-aim-btn" onclick="adminAiMonitor()" title="AI monitoring dashboard">📈 AI Monitor</button>
+    </div>
+    <div id="admin-search-wrap" style="margin-bottom:16px">
+      <input id="admin-search" placeholder="title, area বা owner দিয়ে খুঁজুন…" style="width:100%;padding:11px 14px;background:var(--glass);border:1px solid var(--border);border-radius:8px;color:var(--white);font-family:var(--font-ui);font-size:.85rem" oninput="adminSearchDebounced()"/>
+    </div>
+    <div id="admin-list"></div>
+  </div>
+</div>
+
+<!-- PAYMENT RESULT (SSLCommerz redirect ফিরে আসার পর এখানে ল্যান্ড করে) -->
+<div class="page" id="page-payresult">
+  <div style="padding:160px 24px 80px;max-width:520px;margin:0 auto;text-align:center">
+    <div id="payresult-body">লোড হচ্ছে…</div>
+  </div>
+</div>
+
+<!-- EMERGENCY INFO -->
+<!-- SUPPORT CHAT PANEL — opened via the single .float-support button below ("Chat Support" option), not its own floating button anymore -->
+<div id="chat-widget-panel" style="display:none;position:fixed;bottom:86px;right:20px;z-index:851;width:min(90vw,340px);height:min(70vh,480px);background:var(--bg);border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 48px rgba(0,0,0,.4);display:flex;flex-direction:column;overflow:hidden">
+  <div style="padding:14px 16px;background:linear-gradient(135deg,var(--emerald),var(--emerald-l));display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+    <div style="font-family:var(--font-ui);font-weight:700;color:#fff;font-size:.9rem">🏠 আবাসন সাপোর্ট</div>
+    <button onclick="toggleChatWidget()" style="background:none;border:none;color:#fff;font-size:1.1rem;cursor:pointer">✕</button>
+  </div>
+  <div id="chat-widget-msgs" style="flex:1;overflow-y:auto;padding:14px"></div>
+  <div id="chat-widget-quick" style="padding:0 14px 8px;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0"></div>
+  <div style="padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0">
+    <input id="chat-widget-inp" placeholder="প্রশ্ন লিখো..." style="flex:1;padding:9px 12px;background:var(--glass);border:1px solid var(--border);border-radius:20px;color:var(--white);font-family:var(--font-ui);font-size:.82rem" onkeydown="if(event.key==='Enter')chatWidgetSend()"/>
+    <button onclick="chatWidgetSend()" style="width:36px;height:36px;border-radius:50%;background:var(--emerald);border:none;color:#fff;cursor:pointer;flex-shrink:0">→</button>
+  </div>
+</div>
+
+<!-- PAYMENT RECEIPT -->
+<div class="overlay" id="receipt-ov" onclick="if(event.target===this)closeM('receipt-ov')">
+  <div class="modal" style="max-width:420px">
+    <button class="modal-x" onclick="closeM('receipt-ov')">✕</button>
+    <div id="receipt-body"></div>
+  </div>
+</div>
+
+<div class="overlay" id="emergency-ov" onclick="if(event.target===this)closeM('emergency-ov')">
+  <div class="modal" style="max-width:400px">
+    <button class="modal-x" onclick="closeM('emergency-ov')">✕</button>
+    <div style="padding:32px;text-align:center">
+      <div style="font-size:2.5rem;margin-bottom:8px">🆘</div>
+      <div style="font-family:var(--font-display);font-size:1.3rem;color:var(--white);margin-bottom:16px">জরুরি সাহায্য</div>
+      <div style="font-family:var(--font-ui);font-size:.9rem;color:var(--white-60);line-height:1.8;margin-bottom:20px">
+        সরাসরি জীবন/নিরাপত্তা ঝুঁকি হলে সাথে সাথে কল করো —<br>
+        <a href="tel:999" style="font-size:1.5rem;font-weight:700;color:#e08080;text-decoration:none">📞 ৯৯৯</a><br>
+        <span style="font-size:.78rem">জাতীয় জরুরি সেবা — পুলিশ, ফায়ার সার্ভিস, অ্যাম্বুলেন্স (ফ্রি, ২৪ ঘণ্টা)</span>
+      </div>
+      <div style="font-family:var(--font-ui);font-size:.8rem;color:var(--white-30);margin-bottom:16px">বাসা/লেনদেন সংক্রান্ত জরুরি সমস্যায় আমাদের টিমকে জানাও — এটা তাৎক্ষণিক live সাপোর্ট না, তবে দ্রুততম সময়ে দেখা হবে।</div>
+      <button class="auth-submit" onclick="closeM('emergency-ov');openEmergencyTicket()">আমাদের টিমকে জানাও</button>
+    </div>
   </div>
 </div>
 
@@ -506,28 +747,57 @@
       <div id="apsc1">
         <div class="auth-field"><label>Property title</label><input id="ap-title" placeholder="e.g. 3 Bed Apartment in Gulshan"/></div>
         <div class="auth-row">
-          <div class="auth-field"><label>City</label><select id="ap-city" class="form-i"><option>Dhaka</option><option>Sylhet</option><option>Chattogram</option></select></div>
-          <div class="auth-field"><label>Area</label><input id="ap-area" placeholder="e.g. Gulshan"/></div>
+          <div class="auth-field"><label>City</label><select id="ap-city" class="form-i" onchange="apSuggestRentDebounced()"><option>Dhaka</option><option>Sylhet</option><option>Chattogram</option></select></div>
+          <div class="auth-field"><label>Area</label><input id="ap-area" placeholder="e.g. Gulshan" oninput="apSuggestRentDebounced()"/></div>
         </div>
         <div class="auth-row">
-          <div class="auth-field"><label>Type</label><select id="ap-type" class="form-i"><option>Apartment</option><option>Duplex</option></select></div>
-          <div class="auth-field"><label>Monthly Rent (৳)</label><input id="ap-rent" inputmode="numeric" placeholder="45000"/></div>
+          <div class="auth-field"><label>Type</label><select id="ap-type" class="form-i" onchange="apSuggestRentDebounced()"><option>Apartment</option><option>Duplex</option><option>Sublet</option><option>Seat</option></select></div>
+          <div class="auth-field"><label>Monthly Rent (৳)</label><input id="ap-rent" inputmode="numeric" placeholder="45000" oninput="apSuggestRentDebounced()"/><div id="ap-rent-suggest" style="font-family:var(--font-ui);font-size:.7rem;color:var(--white-30);margin-top:4px"></div></div>
         </div>
         <div class="auth-row">
-          <div class="auth-field"><label>Bedrooms</label><input id="ap-beds" inputmode="numeric" placeholder="3"/></div>
+          <div class="auth-field"><label>Bedrooms</label><input id="ap-beds" inputmode="numeric" placeholder="3" oninput="apSuggestRentDebounced()"/></div>
           <div class="auth-field"><label>Bathrooms</label><input id="ap-baths" inputmode="numeric" placeholder="2"/></div>
         </div>
         <div class="auth-row">
-          <div class="auth-field"><label>Size (sqft)</label><input id="ap-sqft" inputmode="numeric" placeholder="1400"/></div>
+          <div class="auth-field"><label>Size (sqft)</label><input id="ap-sqft" inputmode="numeric" placeholder="1400" oninput="apSuggestRentDebounced()"/></div>
           <div class="auth-field"><label>Furnished</label><select id="ap-furn" class="form-i"><option>Unfurnished</option><option>Semi-Furnished</option><option>Fully Furnished</option></select></div>
         </div>
+        <div class="auth-row">
+          <div class="auth-field"><label>ভাড়াটিয়া — কারা থাকতে পারবে *</label><select id="ap-tenant" class="form-i"><option value="">— বাছো —</option><option value="Family">শুধু ফ্যামিলি</option><option value="Small Family">ছোট ফ্যামিলি</option><option value="Bachelor">ব্যাচেলর</option><option value="Female Bachelor">শুধু মেয়ে ব্যাচেলর</option><option value="Any">সবার জন্য</option></select></div>
+          <div class="auth-field"><label>নূন্যতম কত মাসের জন্য</label><select id="ap-minstay" class="form-i"><option value="1">১ মাস</option><option value="3">৩ মাস</option><option value="6">৬ মাস</option><option value="12" selected>১২ মাস</option></select></div>
+        </div>
+        <div class="auth-row">
+          <div class="auth-field"><label>অগ্রিম (কত মাসের ভাড়া)</label><input id="ap-advance" inputmode="numeric" placeholder="2"/></div>
+          <div class="auth-field"><label>সার্ভিস চার্জ (৳, না থাকলে খালি)</label><input id="ap-svc" inputmode="numeric" placeholder="1500"/></div>
+        </div>
+        <div class="auth-field">
+          <label>সুবিধা</label>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;font-family:var(--font-ui);font-size:.8rem;color:var(--white-60)">
+            <label style="display:flex;align-items:center;gap:5px"><input type="checkbox" id="ap-lift" style="width:auto;margin:0">লিফট</label>
+            <label style="display:flex;align-items:center;gap:5px"><input type="checkbox" id="ap-parking" style="width:auto;margin:0">পার্কিং</label>
+            <label style="display:flex;align-items:center;gap:5px"><input type="checkbox" id="ap-generator" style="width:auto;margin:0">জেনারেটর</label>
+            <label style="display:flex;align-items:center;gap:5px"><input type="checkbox" id="ap-cctv" style="width:auto;margin:0">CCTV</label>
+            <label style="display:flex;align-items:center;gap:5px"><input type="checkbox" id="ap-guard" style="width:auto;margin:0">নিরাপত্তা প্রহরী</label>
+            <label style="display:flex;align-items:center;gap:5px"><input type="checkbox" id="ap-water" style="width:auto;margin:0">২৪ ঘণ্টা পানি</label>
+          </div>
+        </div>
+        <div class="auth-row">
+          <div class="auth-field"><label>গ্যাস</label><select id="ap-gas" class="form-i"><option value="None">নেই</option><option value="Line Gas">লাইন গ্যাস</option><option value="Cylinder">সিলিন্ডার</option></select></div>
+          <div class="auth-field"><label>মুখ (ঐচ্ছিক)</label><select id="ap-facing" class="form-i"><option value="">— বাছো —</option><option>North</option><option>South</option><option>East</option><option>West</option><option>South-East</option><option>South-West</option><option>North-East</option><option>North-West</option></select></div>
+        </div>
+        <div class="auth-field"><label>কাছের চেনা জায়গা (ঐচ্ছিক)</label><input id="ap-landmark" placeholder="e.g. Gulshan 1 Circle"/></div>
         <div class="auth-field"><label>Contact phone</label><input id="ap-phone" inputmode="numeric" placeholder="01XXXXXXXXX"/></div>
+        <div class="auth-field">
+          <label>বাসার ছবি (কমপক্ষে ১টা, সর্বোচ্চ ৫টা)</label>
+          <input type="file" id="ap-img-input" accept="image/jpeg,image/png,image/webp,image/gif" multiple onchange="apOnFilesChosen(this)" style="font-family:var(--font-ui);font-size:.8rem;color:var(--white-60)"/>
+          <div id="ap-img-preview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"></div>
+        </div>
         <button class="auth-submit" onclick="addpReview()">Review →</button>
       </div>
 
       <div id="apsc2" style="display:none">
         <div id="addp-review" class="pbox" style="margin-bottom:16px"></div>
-        <div style="text-align:center;margin-bottom:12px"><span class="demo-label">🔒 Demo Mode — listing stored locally in this browser</span></div>
+        <div style="text-align:center;margin-bottom:12px"><span class="demo-label">🕐 প্রকাশের পর মালিক verified না হওয়া পর্যন্ত "Pending review" দেখাবে</span></div>
         <button class="auth-submit" onclick="confirmAddProperty()">✅ Confirm &amp; Publish</button>
         <button class="btn-back-sm" onclick="apStep(1)">← Back</button>
       </div>
@@ -564,9 +834,9 @@
 
       <!-- LOGIN -->
       <div id="auth-login">
-        <div class="auth-field"><label>Username</label><input id="lg-user" placeholder="username" autocomplete="off"/></div>
-        <div class="auth-field"><label>Password</label><input id="lg-pass" type="password" placeholder="••••••••"/></div>
-        <button class="auth-submit" onclick="doLogin()">Login</button>
+        <div class="auth-field"><label>Username</label><input id="lg-user" placeholder="username" autocomplete="username"/></div>
+        <div class="auth-field"><label>Password</label><input id="lg-pass" type="password" placeholder="••••••••" autocomplete="current-password"/></div>
+        <button class="auth-submit" id="lg-btn" onclick="doLogin()">Login</button>
       </div>
 
       <!-- SIGNUP -->
@@ -576,15 +846,12 @@
           <div class="auth-field"><label>Username</label><input id="su-user" placeholder="username"/></div>
           <div class="auth-field"><label>Phone</label><input id="su-phone" placeholder="01XXXXXXXXX" inputmode="numeric"/></div>
         </div>
+        <div class="auth-field"><label>Email <span style="color:var(--white-30);font-weight:400;text-transform:none;letter-spacing:0">· না দিলে Phone দিয়েই account হবে</span></label><input id="su-email" type="email" placeholder="you@example.com (ঐচ্ছিক)" autocomplete="email"/></div>
         <div class="auth-field"><label>NID number <span style="color:var(--white-30);font-weight:400;text-transform:none;letter-spacing:0"> · জাতীয় পরিচয়পত্র</span></label><input id="su-nid" placeholder="10, 13 or 17 digits" inputmode="numeric"/></div>
         <div class="auth-field"><label id="su-loc-label">Home address</label><textarea id="su-loc" rows="2" placeholder="বাসা/এলাকার ঠিকানা"></textarea></div>
-        <div class="auth-field"><label>Password</label><input id="su-pass" type="password" placeholder="min 4 characters"/></div>
+        <div class="auth-field"><label>Password</label><input id="su-pass" type="password" placeholder="min 6 characters" autocomplete="new-password"/></div>
         <button class="auth-submit" id="su-btn" onclick="doSignup()">Create account</button>
-        <div id="su-otp-wrap" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
-          <div class="auth-field"><label>OTP code <span id="su-otp-hint" style="color:var(--gold-d);font-weight:700;text-transform:none;letter-spacing:0"></span></label><input id="su-otp" placeholder="6-digit code" inputmode="numeric" maxlength="6"/></div>
-          <button class="auth-submit" onclick="finishSignup()">Verify OTP &amp; Create Account</button>
-        </div>
-        <div class="auth-note">🔒 Demo only — data stays in your browser. NID is masked on display; real verification would be a separate KYC step, not stored client-side.</div>
+        <div class="auth-note">🔒 Email দিলে email দিয়ে, না দিলে Phone number দিয়ে account হবে — যেটাই হোক, Login করতে হবে Username + Password দিয়ে। NID যাচাই আপাতত মক (Phase 3-এ real KYC/admin-review যুক্ত হবে); মাস্ক করা অংশটুকুই শুধু সংরক্ষণ করা হয়।</div>
       </div>
     </div>
   </div>
@@ -601,7 +868,7 @@
       <div class="prog-s" id="ps3"><div class="prog-dot">✓</div><div class="prog-lbl">Confirm</div></div>
     </div>
     <div class="psc on" id="psc1">
-      <div class="amt-hero"><div style="font-size:.6875rem;color:var(--white-30);margin-bottom:4px;font-family:var(--font-ui);letter-spacing:.1em;text-transform:uppercase">Advance Booking (10%)</div><div class="amt-n" id="pay-amt"></div><div class="amt-label">Remaining rent paid on move-in day</div></div>
+      <div class="amt-hero"><div style="font-size:.6875rem;color:var(--white-30);margin-bottom:4px;font-family:var(--font-ui);letter-spacing:.1em;text-transform:uppercase">Advance Booking Amount</div><div class="amt-n" id="pay-amt"></div><div class="amt-label">Remaining rent paid on move-in day</div></div>
       <div class="meths">
         <div class="meth sel" onclick="selM(this)"><span class="meth-icon">📱</span><div><div class="meth-name">বিকাশ</div><div class="meth-sub">Mobile Banking</div></div><div class="meth-radio"></div></div>
         <div class="meth" onclick="selM(this)"><span class="meth-icon">💚</span><div><div class="meth-name">নগদ</div><div class="meth-sub">Mobile Banking</div></div><div class="meth-radio"></div></div>
@@ -629,7 +896,14 @@
         <div class="pr-row"><span class="pr-l">Service Charge</span><span class="pr-v">৳ 0</span></div>
         <div class="pr-row"><span class="pr-l" style="font-weight:600;color:var(--white)">Total</span><span class="pr-v hi" id="pc-tot"></span></div>
       </div>
-      <div style="text-align:center;margin-bottom:12px"><span class="demo-label">🔒 Demo Mode — No real transaction processed</span></div>
+      <div style="padding:12px 14px;background:var(--glass);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;font-family:var(--font-ui);font-size:.75rem;color:var(--white-60);line-height:1.6">
+        <div style="font-weight:700;color:var(--white-30);text-transform:uppercase;letter-spacing:.08em;font-size:.65rem;margin-bottom:6px">বুকিং নীতি</div>
+        • এই টাকা বাসাটি ২৪ ঘণ্টা তোমার জন্য লক করে রাখবে — এটা <b>reservation, মালিকানা নয়</b><br/>
+        • মালিক সাড়া না দিলে/বাতিল হলে সম্পূর্ণ টাকা ফেরতযোগ্য<br/>
+        • লক মেয়াদ শেষ হওয়ার আগে নিজে বাতিল করলেও ফেরতের জন্য আবেদন করা যায়<br/>
+        • পেমেন্ট ব্যর্থ হলে কোনো টাকা কাটা হবে না
+      </div>
+      <div id="pay-faq-box" style="margin-bottom:12px"></div>
       <button class="btn-pay ripple-container" id="pay-confirm-btn" onclick="confirmPay()"><span>✅ Confirm &amp; Pay</span></button>
       <button class="btn-back-sm" onclick="gStep(1)">← Back</button>
     </div>
@@ -645,8 +919,149 @@
           <div class="ref-r"><span class="ref-l">Reserved For</span><span class="ref-v" id="ref-timer" style="color:var(--gold-d)">24:00:00</span></div>
           <div class="ref-r"><span class="ref-l">Status</span><span class="ref-v" style="color:var(--emerald-l)">✅ Confirmed</span></div>
         </div>
-        <div style="text-align:center;margin:0 0 14px"><span class="demo-label">🔒 Demo Mode — No real transaction processed</span></div>
+        <div style="text-align:center;margin:0 0 14px;font-family:var(--font-ui);font-size:.7rem;color:var(--white-30)">এটা একটা reservation — মালিকানা হস্তান্তর নয়। চূড়ান্ত চুক্তি ও বাকি পরিশোধ মালিকের সাথে সরাসরি সম্পন্ন করো।</div>
         <button class="btn-pay" onclick="closeM('pay-ov')">✓ Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OWNER-BUYER DIRECT CHAT -->
+<div class="overlay" id="chat-ov" onclick="if(event.target===this)closeChatOv()">
+  <div class="modal" style="max-width:520px;height:min(80vh,640px);display:flex;flex-direction:column;padding:0;overflow:hidden">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0">
+      <button id="chat-back" onclick="chatShowList()" style="display:none;background:none;border:none;color:var(--white);font-size:1.1rem;cursor:pointer" aria-label="ফিরে যান">←</button>
+      <div style="flex:1">
+        <div class="pay-title" id="chat-title" style="font-size:1rem">💬 Messages</div>
+        <div id="chat-sub" style="font-family:var(--font-ui);font-size:.7rem;color:var(--white-30)"></div>
+      </div>
+      <button class="modal-x" style="position:static" onclick="closeChatOv()">✕</button>
+    </div>
+    <div id="chat-list" style="flex:1;overflow-y:auto;padding:10px 14px"></div>
+    <div id="chat-thread" style="display:none;flex:1;overflow-y:auto;padding:14px;flex-direction:column;gap:8px"></div>
+    <div id="chat-input-row" style="display:none;padding:10px 14px;border-top:1px solid var(--border);gap:8px;flex-shrink:0">
+      <input id="chat-input" placeholder="মেসেজ লিখুন…" maxlength="2000" style="flex:1;padding:10px 14px;background:var(--glass);border:1px solid var(--border);border-radius:22px;color:var(--white);font-family:var(--font-ui);font-size:.85rem" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSendMsg()}"/>
+      <button onclick="chatSendMsg()" aria-label="পাঠান" style="width:40px;height:40px;border-radius:50%;background:var(--emerald);border:none;color:#fff;cursor:pointer;flex-shrink:0;font-size:1rem">→</button>
+    </div>
+  </div>
+</div>
+
+<!-- RENT AGREEMENT E-DOC GENERATOR -->
+<div class="overlay" id="aim-ov" onclick="if(event.target===this)closeM('aim-ov')">
+  <div class="modal" style="max-width:960px;width:94%">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-family:var(--font-display);font-size:1.2rem;color:var(--white)">📈 AI Monitoring <span style="font-size:.7rem;color:var(--white-30)">শেষ ৭ দিন</span></div>
+      <button class="modal-x" onclick="closeM('aim-ov')">✕</button>
+    </div>
+    <div id="aim-body" style="max-height:72vh;overflow:auto"></div>
+  </div>
+</div>
+<!-- Phase 11 — Compare floating bar + overlay (net-new, master-prompt Section 14/19) -->
+<div id="compare-bar" class="compare-bar" hidden></div>
+<div class="overlay" id="compare-ov" onclick="if(event.target===this)closeM('compare-ov')">
+  <div class="modal" style="max-width:900px;width:94%">
+    <button class="modal-x" onclick="closeM('compare-ov')">✕</button>
+    <div class="pay-header"><div class="pay-title">⚖ প্রপার্টি তুলনা</div><div class="pay-sub">পাশাপাশি দেখে সিদ্ধান্ত নাও — চূড়ান্ত পছন্দ তোমারই</div></div>
+    <div id="compare-ov-body" style="max-height:70vh;overflow-y:auto"></div>
+  </div>
+</div>
+<div class="overlay" id="agr-ov" onclick="if(event.target===this)closeM('agr-ov')">
+  <div class="modal" style="max-width:560px">
+    <button class="modal-x" onclick="closeM('agr-ov')">✕</button>
+    <div class="pay-header"><div class="pay-title">📄 ভাড়ার চুক্তিপত্র তৈরি করো</div><div class="pay-sub">তথ্য দাও → PDF প্রিন্ট বা Word ফাইল ডাউনলোড</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="form-g"><label class="form-l">বাড়ির মালিকের নাম</label><input class="form-i" id="agr-owner"/></div>
+      <div class="form-g"><label class="form-l">ভাড়াটিয়ার নাম</label><input class="form-i" id="agr-tenant"/></div>
+    </div>
+    <div class="form-g"><label class="form-l">মালিকের ঠিকানা</label><input class="form-i" id="agr-owner-addr" placeholder="ঐচ্ছিক"/></div>
+    <div class="form-g"><label class="form-l">ভাড়াটিয়ার স্থায়ী ঠিকানা</label><input class="form-i" id="agr-tenant-addr" placeholder="ঐচ্ছিক"/></div>
+    <div class="form-g"><label class="form-l">ভাড়াকৃত বাসার পূর্ণ ঠিকানা *</label><input class="form-i" id="agr-prop-addr" placeholder="ফ্ল্যাট/বাসা নং, রোড, এলাকা, শহর"/></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div class="form-g"><label class="form-l">মাসিক ভাড়া (৳) *</label><input class="form-i" id="agr-rent" type="number" inputmode="numeric"/></div>
+      <div class="form-g"><label class="form-l">অগ্রিম (৳)</label><input class="form-i" id="agr-adv" type="number" inputmode="numeric" value="0"/></div>
+      <div class="form-g"><label class="form-l">মেয়াদ (মাস)</label><input class="form-i" id="agr-term" type="number" inputmode="numeric" value="12"/></div>
+    </div>
+    <div class="form-g"><label class="form-l">ভাড়া শুরুর তারিখ</label><input class="form-i" id="agr-start" type="date"/></div>
+    <div class="form-g"><label class="form-l">বিশেষ শর্ত (ঐচ্ছিক)</label><textarea class="form-i" id="agr-extra" rows="2" placeholder="যেমন: সার্ভিস চার্জ ভাড়ার অন্তর্ভুক্ত, ছাদ ব্যবহারের অনুমতি আছে…"></textarea></div>
+    <div style="display:flex;gap:10px;margin-top:6px">
+      <button class="btn-pay" style="flex:1" onclick="agrGenerate('pdf')">🖨️ PDF (Print)</button>
+      <button class="btn-pay" style="flex:1;background:var(--gold);color:#1a1a1a" onclick="agrGenerate('doc')">⬇️ Word (.doc)</button>
+    </div>
+    <div id="agr-err" style="color:#e5484d;font-family:var(--font-ui);font-size:.75rem;margin-top:8px"></div>
+    <div style="font-family:var(--font-ui);font-size:.68rem;color:var(--white-30);margin-top:10px;line-height:1.6">⚠️ এটি একটি সাধারণ টেমপ্লেট, আইনি পরামর্শ নয়। বাড়ীভাড়া নিয়ন্ত্রণ আইন ১৯৯১ অনুযায়ী লিখিত চুক্তি ও ভাড়ার রসিদ বাধ্যতামূলক; প্রয়োজনে নন-জুডিশিয়াল স্ট্যাম্পে সম্পাদন ও আইনজীবীর পরামর্শ নিন।</div>
+  </div>
+</div>
+
+<!-- RATING / REPORT MODAL (prompt() replacement) -->
+<div class="overlay" id="rate-ov" onclick="if(event.target===this)closeM('rate-ov')">
+  <div class="modal" style="max-width:420px">
+    <button class="modal-x" onclick="closeM('rate-ov')">✕</button>
+    <div class="pay-header"><div class="pay-title" id="rate-title">Rating দিন</div></div>
+    <div id="rate-stars" style="display:none;justify-content:center;gap:10px;font-size:2rem;margin:8px 0 14px;cursor:pointer;user-select:none"></div>
+    <div class="form-g" id="rate-text-wrap" style="display:none"><textarea class="form-i" id="rate-text" rows="3"></textarea></div>
+    <button class="btn-pay" onclick="rateSubmit()">জমা দিন</button>
+    <div id="rate-err" style="color:#e5484d;font-family:var(--font-ui);font-size:.75rem;margin-top:8px"></div>
+  </div>
+</div>
+
+<div class="overlay" id="verify-ov" onclick="if(event.target===this)closeM('verify-ov')">
+  <div class="modal" style="max-width:520px">
+    <button class="modal-x" onclick="closeM('verify-ov')">✕</button>
+    <div class="pay-header"><div class="pay-title">Verify Your Account <span id="vfy-demo-badge" style="display:none;font-size:.6rem;background:rgba(212,175,55,.15);color:var(--gold-d);border:1px solid var(--gold);border-radius:999px;padding:2px 8px;vertical-align:middle;font-family:var(--font-ui)">🔒 DEMO MODE</span></div><div class="pay-sub">ফোন, NID ও ফেস — একটার পর একটা</div></div>
+    <div id="vfy-status" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;font-family:var(--font-ui);font-size:.75rem"></div>
+    <div class="prog-steps">
+      <div class="prog-s on" id="vfy-ps1"><div class="prog-dot">১</div><div class="prog-lbl">Phone</div></div>
+      <div class="prog-s" id="vfy-ps2"><div class="prog-dot">২</div><div class="prog-lbl">NID</div></div>
+      <div class="prog-s" id="vfy-ps3"><div class="prog-dot">৩</div><div class="prog-lbl">Face</div></div>
+    </div>
+
+    <div class="psc on" id="vfy-sc1">
+      <p style="font-family:var(--font-ui);font-size:.8rem;color:var(--white-60);margin-bottom:10px">
+        listing publish করতে বা visit বুক করতে আগে ফোন নম্বর যাচাই করতে হবে।
+      </p>
+      <div class="form-g"><label class="form-l">Phone</label><input class="form-i" id="vfy-phone" placeholder="01XXXXXXXXX" inputmode="numeric"/></div>
+      <button class="btn-pay" id="vfy-send-btn" onclick="vfySendOtp()">OTP পাঠান</button>
+      <div id="vfy-otp-box" style="display:none;margin-top:12px">
+        <div class="form-g"><label class="form-l">6-digit code</label><input class="form-i" id="vfy-code" inputmode="numeric" maxlength="6" placeholder="——————"/></div>
+        <div id="vfy-devcode-hint" style="font-family:var(--font-ui);font-size:.7rem;color:var(--gold-d);margin-bottom:8px"></div>
+        <button class="btn-pay" onclick="vfyVerifyOtp()">যাচাই করুন</button>
+      </div>
+      <div id="vfy-err1" style="color:#e5484d;font-family:var(--font-ui);font-size:.75rem;margin-top:8px"></div>
+    </div>
+
+    <div class="psc" id="vfy-sc2">
+      <p style="font-family:var(--font-ui);font-size:.8rem;color:var(--white-60);margin-bottom:10px">
+        NID নম্বর ও ছবি জমা দিন। <b>এটা শুধু format-check</b> — সরকারি ডাটাবেজের সাথে মিলিয়ে দেখা হয় না
+        (এমন কোনো public API নেই)। পরবর্তী ধাপে face-verification-ই আসল পরিচয় যাচাই করে।
+      </p>
+      <div class="form-g"><label class="form-l">NID Number</label><input class="form-i" id="vfy-nid" inputmode="numeric" placeholder="10, 13 or 17 digits"/></div>
+      <div class="form-g"><label class="form-l">NID Photo (সামনের পাশ)</label><input class="form-i" id="vfy-nid-file" type="file" accept="image/*"/></div>
+      <button class="btn-pay" onclick="vfySubmitNid()">জমা দিন</button>
+      <button class="btn-back-sm" onclick="vfyStep(1)">← Back</button>
+      <div id="vfy-err2" style="color:#e5484d;font-family:var(--font-ui);font-size:.75rem;margin-top:8px"></div>
+    </div>
+
+    <div class="psc" id="vfy-sc3">
+      <p style="font-family:var(--font-ui);font-size:.8rem;color:var(--white-60);margin-bottom:10px">
+        একটা লাইভ সেলফি দিন। <b>বায়োমেট্রিক তথ্য সংগ্রহ হবে</b> — শুধু match score/pass-fail রাখা হয়,
+        ছবি নিজে নির্দিষ্ট সময় পর মুছে ফেলা হবে (retention policy — দেখুন Terms of Service)।
+      </p>
+      <label style="display:flex;gap:8px;align-items:flex-start;font-family:var(--font-ui);font-size:.75rem;color:var(--white-60);margin-bottom:10px">
+        <input type="checkbox" id="vfy-liveness" style="margin-top:2px"/>
+        <span>আমি ক্যামেরার সামনে চোখের পলক ফেলেছি / মাথা ঘুরিয়েছি (liveness check)</span>
+      </label>
+      <div class="form-g"><label class="form-l">Selfie</label><input class="form-i" id="vfy-selfie-file" type="file" accept="image/*" capture="user"/></div>
+      <button class="btn-pay" onclick="vfySubmitFace()">Face যাচাই করুন</button>
+      <button class="btn-back-sm" onclick="vfyStep(2)">← Back</button>
+      <div id="vfy-err3" style="color:#e5484d;font-family:var(--font-ui);font-size:.75rem;margin-top:8px"></div>
+    </div>
+
+    <div class="psc" id="vfy-sc4">
+      <div class="success-screen">
+        <div class="succ-icon">🎉</div>
+        <div class="succ-title">Verification Complete!</div>
+        <p class="succ-desc">এখন আপনি listing publish করতে বা visit বুক করতে পারবেন।</p>
+        <button class="btn-pay" onclick="closeM('verify-ov')">✓ Done</button>
       </div>
     </div>
   </div>
@@ -693,27 +1108,80 @@
         <div class="pr-row"><span class="pr-l">Price Range</span><span class="pr-v hi" id="im-pr"></span></div>
         <div class="pr-row"><span class="pr-l">Rating</span><span class="pr-v" id="im-rt"></span></div>
       </div>
-      <button class="btn-pay" onclick="closeM('int-ov');setTimeout(()=>alert('Designer contacted! They will reach out soon.'),150)">🎨 Contact Designer</button>
+      <button class="btn-pay" onclick="closeM('int-ov');setTimeout(()=>toast('✓ ডিজাইনারকে জানানো হয়েছে — শীঘ্রই যোগাযোগ করবেন','',3000),150)">🎨 Contact Designer</button>
     </div>
   </div>
 </div>
 
-<!-- FLOAT SUPPORT -->
+<!-- REPORT LISTING MODAL — AKSIS Phase 7 (Section 24), fur-ov/int-ov-এর হুবহু প্যাটার্নে -->
+<div class="overlay" id="report-listing-ov" onclick="if(event.target===this)closeM('report-listing-ov')">
+  <div class="modal" style="max-width:460px">
+    <button class="modal-x" onclick="closeM('report-listing-ov')">✕</button>
+    <div class="pay-header"><div class="pay-title">🚩 সন্দেহজনক লিস্টিং রিপোর্ট করো</div><div class="pay-sub">আমাদের admin team পর্যালোচনা করে দেখবে — কাউকে স্বয়ংক্রিয়ভাবে ব্যান করা হয় না</div></div>
+    <div class="form-g" style="margin-bottom:10px">
+      <label class="form-l">কারণের ধরন</label>
+      <select id="rl-category" class="form-i">
+        <option value="fraud">জালিয়াতি/প্রতারণা</option>
+        <option value="fake_listing">ভুয়া লিস্টিং</option>
+        <option value="incorrect_info">ভুল তথ্য</option>
+        <option value="owner_misconduct">মালিকের অসদাচরণ</option>
+        <option value="payment">পেমেন্ট সমস্যা</option>
+        <option value="other" selected>অন্যান্য</option>
+      </select>
+    </div>
+    <div class="form-g" style="margin-bottom:10px">
+      <label class="form-l">বিস্তারিত লিখো</label>
+      <textarea id="rl-reason" rows="3" class="form-i" style="resize:vertical" placeholder="কী সন্দেহজনক মনে হয়েছে বিস্তারিত লেখো..."></textarea>
+    </div>
+    <label style="display:inline-flex;align-items:center;gap:6px;margin-bottom:12px;font-family:var(--font-ui);font-size:.78rem;color:var(--white-30);cursor:pointer">📎 প্রমাণ (স্ক্রিনশট) যোগ করো<input type="file" id="rl-evidence" multiple accept=".jpg,.jpeg,.png,.pdf" style="display:none"/></label>
+    <button class="btn-pay" onclick="submitListingReport()">রিপোর্ট জমা দাও</button>
+  </div>
+</div>
+<!-- FURNITURE MODAL — int-ov-এর হুবহু প্যাটার্নে (Phase 16 — ecosystem consistency) -->
+<div class="overlay" id="fur-ov" onclick="if(event.target===this)closeM('fur-ov')">
+  <div class="modal" style="max-width:460px">
+    <button class="modal-x" onclick="closeM('fur-ov')">✕</button>
+    <img id="fur-m-img" src="" alt="" style="width:100%;height:220px;object-fit:cover;border-radius:14px;margin-bottom:16px"/>
+    <div style="font-family:var(--font-display);font-size:1.25rem;font-weight:500;color:var(--white);margin-bottom:4px" id="fur-m-n"></div>
+    <div style="font-family:var(--font-ui);font-size:.8125rem;color:var(--white-30);margin-bottom:16px" id="fur-m-t"></div>
+    <div class="pbox" style="margin-bottom:16px">
+      <div class="pr-row"><span class="pr-l">দাম</span><span class="pr-v hi" id="fur-m-p"></span></div>
+      <div class="pr-row"><span class="pr-l">আগের দাম</span><span class="pr-v" id="fur-m-old" style="text-decoration:line-through;color:var(--white-30)"></span></div>
+    </div>
+    <button class="btn-pay" onclick="contactFurSeller()">🛋️ বিক্রেতার সাথে যোগাযোগ করুন</button>
+  </div>
+</div>
+
+<!-- FLOAT SUPPORT — একটাই বাটন; খুললে ৩টা আসল ফিচারে রুট করে (আলাদা কোনো ভুয়া/ওভারল্যাপিং widget না) -->
 <div class="float-support">
   <div class="float-panel" id="fl-p">
     <div class="fp-title">How can we help?</div>
-    <div class="fp-opt" onclick="alert('Chat support coming soon!')"><div class="fp-ico" style="background:rgba(14,90,69,.2)">💬</div>Chat Support</div>
-    <div class="fp-opt" onclick="alert('Call: 16599')"><div class="fp-ico" style="background:rgba(212,175,55,.1)">📞</div>Call Us</div>
-    <div class="fp-opt" onclick="goPage('ai')"><div class="fp-ico" style="background:rgba(109,40,217,.15)">🤖</div>AI Assistant</div>
+    <div class="fp-opt" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" onclick="flPick(()=>toggleChatWidget())"><div class="fp-ico" style="background:rgba(14,90,69,.2)">💬</div>Chat Support</div>
+    <div class="fp-opt" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" onclick="flPick(()=>alert('আমাদের সাথে যোগাযোগ করুন: 📞 01712345678'))"><div class="fp-ico" style="background:rgba(212,175,55,.1)">📞</div>Call Us</div>
+    <div class="fp-opt" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" onclick="flPick(()=>goPage('ai'))"><div class="fp-ico" style="background:rgba(109,40,217,.15)">🤖</div>AI Assistant</div>
   </div>
   <button class="float-btn" onclick="document.getElementById('fl-p').classList.toggle('open')">💬</button>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabaseClient.js"></script>
-<script src="js/authService.js"></script>
-<script src="js/propertyService.js"></script>   
-<script src="js/aiDB.js"></script>
-<script src="js/services.js"></script>
-<script src="js/app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
+<script src="js/config.js" defer></script>
+<script src="js/errors.js" defer></script>
+<script src="js/validators.js" defer></script>
+<script src="js/coreUtils.js" defer></script>
+<script src="js/supabaseClient.js" defer></script>
+<script src="js/authService.js" defer></script>
+<script src="js/propertyService.js" defer></script>
+<script src="js/phoneVerificationService.js" defer></script>
+<script src="js/faceVerificationService.js" defer></script>
+<script src="js/reportService.js" defer></script>
+<script src="js/imageReviewService.js" defer></script>
+<script src="js/agreementService.js" defer></script>
+<script src="js/chatService.js" defer></script>
+<script src="js/aiCopilotService.js" defer></script>
+<script src="js/nlp.js" defer></script>
+<script src="js/conversationMemory.js" defer></script>
+<script src="js/rankingService.js" defer></script>
+<script src="js/services.js" defer></script>
+<script src="js/app.js" defer></script>
 </body>
 </html>
