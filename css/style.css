@@ -69,6 +69,7 @@ body {
   font-family: var(--font-body);
   background: var(--bg);
   color: var(--white);
+  line-height: 1.65;
   overflow-x: hidden;
   cursor: auto;
   -webkit-font-smoothing: antialiased;
@@ -1547,11 +1548,14 @@ section { padding:var(--s16) var(--s8); }
   display:flex; align-items:center; gap:var(--s1);
   padding:10px var(--s2); border-radius:var(--r-sm);
   font-family:var(--font-ui); font-size:.8125rem;
-  color:var(--white-30); cursor:pointer; transition:all .2s;
+  color:var(--white-30); cursor:pointer;
+  border-left:2px solid transparent;
+  transition:background .25s ease, color .25s ease, border-color .25s ease, padding-left .25s ease;
 }
-.dm:hover, .dm.active {
-  background:rgba(212,175,55,.08);
-  color:var(--gold);
+.dm:hover { background:rgba(212,175,55,.06); color:var(--white); padding-left:calc(var(--s2) + 2px); }
+.dm.active {
+  background:rgba(212,175,55,.1); color:var(--gold);
+  border-left-color:var(--gold); font-weight:600;
 }
 .dash-content { display:flex; flex-direction:column; gap:var(--s3); }
 .stat-row { display:grid; grid-template-columns:repeat(4,1fr); gap:var(--s2); }
@@ -1560,6 +1564,20 @@ section { padding:var(--s16) var(--s8); }
   background:var(--glass);
   border:1px solid var(--border);
   border-radius:var(--r-lg); text-align:center;
+  transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+.stat-c:hover { transform:translateY(-3px); box-shadow:var(--sh-card); border-color:var(--border-gold); }
+
+/* ল্যাপটপ/narrow-window রেঞ্জ (768-1100px আগে সম্পূর্ণ ফাঁকা ছিল) — half-screen snapped window,
+   ছোট ল্যাপটপ (1024-1366px হলেও multi-tasking-এ actual viewport এই রেঞ্জে নেমে আসে প্রায়ই) */
+@media(max-width:1024px){
+  .dash-grid { grid-template-columns:220px 1fr; gap:var(--s3); }
+  .dash-side { position:static; top:auto; padding:var(--s3); }
+  .stat-row { grid-template-columns:repeat(2,1fr); }
+}
+@media(max-width:820px){
+  .dash-grid { grid-template-columns:1fr; }
+  .dash-side { position:static; }
 }
 .stat-n {
   font-family:var(--font-display); font-size:1.75rem;
