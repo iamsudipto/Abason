@@ -72,7 +72,11 @@ const ConvMemory = (() => {
     if (e.occupation) mem.occupation = e.occupation;
     if (e.preferredFloor !== null && e.preferredFloor !== undefined) mem.preferredFloor = e.preferredFloor;
     if (e.propertyType) mem.propertyType = e.propertyType;
-    if (e.txType) mem.txType = e.txType;
+    // txType: SALE কখনো memory-তে persist করি না — buy/sell এখনো supported feature না (site থেকে
+    // সরানো হয়েছে), তাই একটা buy-related প্রশ্ন (যেমন "EMI te kinle koto porbe") পরের turn-এর
+    // rental search-কে silently 0-result বানিয়ে দেবে যদি SALE মনে রাখি (filterMatches txType==SALE
+    // হলে সব RENT বাদ দেয়)। RENT সবসময় নিরাপদ persist করার জন্য, কারণ এটাই একমাত্র সমর্থিত flow।
+    if (e.txType === 'RENT') mem.txType = 'RENT';
     mergeList(mem.amenities, (e.amenities || []).filter(a => a !== 'parking'), 6);
     mergeList(mem.excludedAmenities, (e.excludedAmenities || []).filter(a => a !== 'parking'), 6);
     if (e.durationMonths) mem.durationMonths = e.durationMonths;

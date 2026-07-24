@@ -36,6 +36,32 @@ const AbashonUtil = (() => {
       set(data) { storageSetJSON(key, { ts: Date.now(), data }); },
     };
   }
-  return { esc, bn, storageGetJSON, storageSetJSON, createTtlCache };
+  /**
+   * টেক্সট ধীরে ধীরে reveal করে (streaming-এর visual অনুভূতি — real backend token-stream না,
+   * client-side reveal মাত্র)। prefers-reduced-motion থাকলে সাথে সাথেই পুরো টেক্সট দেখায় (accessibility)।
+   * @param {HTMLElement} el @param {string} text @param {{onDone?:Function, wordsPerTick?:number}} [opts]
+   */
+  function typewriter(el, text, opts) {
+    opts = opts || {};
+    const reduceMotion = typeof window !== 'undefined' && window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion || typeof window === 'undefined') {
+      el.textContent = text;
+      if (opts.onDone) opts.onDone();
+      return;
+    }
+    const words = String(text).split(/(\s+)/); // whitespace রেখেই split, join করলে হুবহু ফিরে আসে
+    const perTick = Math.max(1, opts.wordsPerTick || 2); // দীর্ঘ উত্তরেও দ্রুত শেষ হয়
+    let i = 0;
+    el.textContent = '';
+    (function tick() {
+      i = Math.min(words.length, i + perTick);
+      el.textContent = words.slice(0, i).join('');
+      if (el.scrollIntoView && el.parentElement) el.parentElement.scrollTop = el.parentElement.scrollHeight;
+      if (i < words.length) requestAnimationFrame(() => setTimeout(tick, 16));
+      else if (opts.onDone) opts.onDone();
+    })();
+  }
+  return { esc, bn, storageGetJSON, storageSetJSON, createTtlCache, typewriter };
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = AbashonUtil;

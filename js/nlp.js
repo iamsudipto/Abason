@@ -135,6 +135,9 @@ const AbashonNLP = (() => {
 
   // ── ৩) Negation (scope-aware) ──
   // NEG (না/not/nai): পেছনের ২ টোকেনের মধ্যে target খোঁজে; EXCL (ছাড়া/without/bade): ঠিক আগের টোকেন।
+  // clause-boundary (but/কিন্তু/and ইত্যাদি) পেরিয়ে scan করে না — নইলে "X lagbe but I don't know Y"-তে
+  // "don't" ভুলভাবে আগের clause-এর "lagbe"-কে negate করে ফেলত (আসল বাগ, ১১০০-query eval-এ ধরা পড়েছে)।
+  const CLAUSE_BREAK = new Set(['but','কিন্তু','and','আর','however','যদিও','তবে','though','যাইহোক']);
   function detectNegations(tokens) {
     const out = [];
     const PRIORITY = ['amenity','area','tenant','buy','rent','search'];
@@ -146,6 +149,7 @@ const AbashonNLP = (() => {
       // "parking lagbe na": verb(lagbe) আগে এলেও negation-টা আসলে parking-এর
       for (let j = i - 1; j >= Math.max(0, i - span); j--) {
         const t = tokens[j].canon;
+        if (CLAUSE_BREAK.has(t)) break; // clause-boundary — আরও পেছনে scan করা বন্ধ
         if (AMENITY_SET.has(t)) found.push({ target: 'amenity', token: t });
         else if (t === 'pet') found.push({ target: 'pet', token: t });
         else if (AREA_LOOKUP[t]) found.push({ target: 'area', token: AREA_LOOKUP[t].key });
@@ -249,15 +253,15 @@ const AbashonNLP = (() => {
 
   // ── ৫) Multi-intent classification + confidence ──
   const INTENT_RULES = {
-    property_search: { toks:['basha','bari','flat','house','room','bhk','bed','khujchi','chai','lagbe','need','bhara','cheap','premium','office','mess','hostel','sublet'], w:1 },
+    property_search: { toks:['basha','bari','flat','house','room','bhk','bed','khujchi','chai','lagbe','need','bhara','cheap','premium','office','mess','hostel','sublet','এলাকা','এলাকায়','area','neighborhood','পাড়া'], w:1 },
     buy_guidance:    { toks:['kinbo','kena','buy','দলিল','খতিয়ান','নামজারি','dolil','khotian','namjari','registration'], w:2 },
     rent_law:        { toks:['advance','deposit','eviction','notice','receipt','law'], w:2 },
-    shifting:        { toks:['shifting'], w:3 },
-    fraud_check:     { toks:['fraud'], w:3 },
+    shifting:        { toks:['shifting','moving','move','বদলাতে','bodlate','shift','সরাতে','sorate'], w:3 },
+    fraud_check:     { toks:['fraud','verified','genuine','আসল','real','জালিয়াতি','প্রতারণা','ভুয়া','vua','scam'], w:3 },
     agreement:       { toks:['agreement'], w:3 },
-    price_negotiation:{ toks:['negotiate'], w:3 },
-    platform_help:   { toks:['how','verify','account','login','visit'], w:1 },
-    interior:        { toks:['interior'], w:3 },
+    price_negotiation:{ toks:['negotiate','koto','কত','price','দাম','dam'], w:3 },
+    platform_help:   { toks:['how','verify','account','login','visit','help','সাহায্য','sahajjo'], w:1 },
+    interior:        { toks:['interior','মিস্ত্রি','mistri','plumber','electrician','handyman','মেরামত','repair'], w:3 },
     greeting:        { toks:['greet'], w:2 },
   };
   function classifyIntents(tokens, entities, negations) {

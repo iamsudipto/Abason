@@ -475,11 +475,14 @@ async function submitListingReport(){
   const reason=_val('rl-reason');
   if(!reason){ toast('বিস্তারিত লেখো','err'); return; }
   const fileInp=document.getElementById('rl-evidence');
+  const btn=document.getElementById('rl-submit-btn');
+  const orig=btn.innerHTML; btn.disabled=true; btn.innerHTML='<span class="svc-spin"></span> জমা হচ্ছে…';
   try{
     const r=await ReportSvc.reportListing(_reportListingPid,category,reason,fileInp?.files||[]);
     closeM('report-listing-ov');
     toast(`✓ রিপোর্ট জমা হয়েছে — admin team পর্যালোচনা করবে`,'',3500);
   }catch(e){ toast(friendlyError(e),'err'); }
+  finally{ btn.disabled=false; btn.innerHTML=orig; }
 }
 function openFur(i){
   const f=furs[i]; if(!f)return;
@@ -635,7 +638,7 @@ async function renderDetail(id){
         <div style="padding:24px;background:var(--glass);border:1px solid var(--border-gold);border-radius:24px;text-align:center;min-width:180px">
           <div style="font-family:var(--font-display);font-size:1.75rem;font-weight:500;color:var(--white);letter-spacing:-.02em">৳${p.rent.toLocaleString()}</div>
           <div style="font-family:var(--font-ui);font-size:.75rem;color:var(--white-30);margin-top:2px">/${p.type==='RENT'?'month':'sale price'}</div>
-          <div style="margin-top:12px;padding:8px;background:rgba(14,90,69,.2);border:1px solid rgba(14,90,69,.3);border-radius:8px;font-family:var(--font-ui);font-size:.75rem;color:var(--emerald-l)">${p.adv?`অগ্রিম: ৳${(p.rent*p.adv).toLocaleString()} (${bnNum(p.adv)} মাস)`:'অগ্রিম: owner-এর সাথে সরাসরি জেনে নাও'}</div>
+          <div style="margin-top:12px;padding:8px;background:rgba(14,90,69,.2);border:1px solid rgba(14,90,69,.3);border-radius:8px;font-family:var(--font-ui);font-size:.75rem;color:var(--emerald-l)">${p.adv?`মূল অগ্রিম (move-in-এ owner-কে দিতে হবে): ৳${(p.rent*p.adv).toLocaleString()} (${bnNum(p.adv)} মাস) — এখন charge হবে না`:'অগ্রিম: owner-এর সাথে সরাসরি জেনে নাও'}</div>
           ${p.fromDB && p.reserved ? `<button disabled style="width:100%;margin-top:10px;padding:12px;background:var(--glass);color:var(--white-30);font-family:var(--font-ui);font-size:.75rem;border-radius:8px;border:none;cursor:not-allowed">🔒 এই মুহূর্তে অন্য কেউ reserve করে রেখেছে</button>
           <div style="font-family:var(--font-ui);font-size:.6875rem;color:var(--white-30);margin-top:6px;line-height:1.4">${p.reservedUntil?('আবার available হতে পারে: '+new Date(p.reservedUntil).toLocaleString('bn-BD',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})):'কিছুক্ষণ পর আবার চেষ্টা করুন'} — চাইলে এখনই মালিককে booking request পাঠাতে পারো।</div>`
           : p.fromDB?`<button onclick="openPay()" style="width:100%;margin-top:10px;padding:12px;background:linear-gradient(135deg,var(--gold),var(--gold-d));color:#000;font-family:var(--font-ui);font-size:.8125rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:8px;border:none;cursor:pointer;transition:all .3s">🔒 ২৪ ঘণ্টা লক করো</button>
@@ -746,7 +749,9 @@ function openPay(){
   if(!requireAuth('buyer',()=>openPay()))return;
   // Phase 13 — সঠিক অগ্রিম (advance_months×rent), server-এর lock_property()-এর হুবহু একই সূত্র;
   // ডেটা না থাকলে honest ন্যূনতম ফলব্যাক (flat ভুল-১০% অনুমান নয়)
-  const adv=Math.round(curProp.rent*(Number(curProp.adv)||1));
+  // সংশোধন: এটা booking/lock token (ভাড়ার ১০%) — বাসা ধরে রাখার ছোট token, আসল advance/security
+  // deposit না (সেটা move-in-এ owner-কে সরাসরি দিতে হয়, নিচের cost-breakdown কার্ডে informational দেখানো হয়)
+  const adv=Math.round(curProp.rent*0.10);
   document.getElementById('pay-pn').textContent=curProp.t+' · '+curProp.area;
   document.getElementById('pay-amt').textContent='৳'+adv.toLocaleString();
   document.getElementById('pc-amt').textContent='৳'+adv.toLocaleString();
@@ -776,7 +781,7 @@ function selM(el){
 async function confirmPay(){
   if(!curProp || !session){ return; }
   const btn=document.getElementById('pay-confirm-btn');
-  const amount=Math.round(curProp.rent*(Number(curProp.adv)||1)); // Phase 13 — server(lock_property)-এর সূত্রের সাথে মিলিয়ে; server নিজেই আবার এটা যাচাই/পুনর্গণনা করে, client-input চূড়ান্ত নয়
+  const amount=Math.round(curProp.rent*0.10); // booking token = ভাড়ার ১০% (server lock_property()-এর সূত্রের সাথে মিলিয়ে); server নিজেই আবার যাচাই/পুনর্গণনা করে, client-input চূড়ান্ত নয়
   btn.disabled=true; const orig=btn.innerHTML; btn.innerHTML='<span class="svc-spin"></span> Processing…';
   let locked=false;
   try{
@@ -1230,7 +1235,8 @@ function aiMatch(q){
 // ── HOME AI ──
 function hAddMsg(txt,type){
   const d=document.getElementById('home-ai-msgs'),m=document.createElement('div');
-  m.className='ai-msg '+type;m.textContent=txt;d.appendChild(m);d.scrollTop=d.scrollHeight;
+  m.className='ai-msg '+type;d.appendChild(m);d.scrollTop=d.scrollHeight;
+  if(type==='bot') AbashonUtil.typewriter(m,txt); else m.textContent=txt;
 }
 function homeQ(q){document.getElementById('home-ai-inp').value=q;homeAI();}
 // ── Copilot pipeline (দুই চ্যাটেই ব্যবহৃত) ──
@@ -1351,7 +1357,8 @@ function aiFAddMsg(txt,type){
   const d=document.getElementById('ai-full-msgs'),m=document.createElement('div');
   m.className='ai-msg '+type;
   m.style.cssText=`padding:10px 14px;border-radius:12px;font-family:var(--font-ui);font-size:.8125rem;line-height:1.55;max-width:88%;${type==='bot'?'background:rgba(14,90,69,.2);border:1px solid rgba(14,90,69,.3);color:rgba(28,38,33,.9);align-self:flex-start':'background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.2);color:rgba(28,38,33,.82);align-self:flex-end'}`;
-  m.textContent=txt;d.appendChild(m);d.scrollTop=d.scrollHeight;
+  d.appendChild(m);d.scrollTop=d.scrollHeight;
+  if(type==='bot') AbashonUtil.typewriter(m,txt); else m.textContent=txt;
 }
 function aiQ(q){document.getElementById('ai-fi').value=q;fullAI();}
 // Phase 7 — হোমপেজ smart-search: AI পেজে নিয়ে গিয়ে aiQ()-এর একই প্যাটার্ন পুনর্ব্যবহার (নকল লজিক নয়)।
@@ -1477,11 +1484,11 @@ function setRole(r){
   authRole=r;
   document.getElementById('ro-buyer').classList.toggle('on',r==='buyer');
   document.getElementById('ro-seller').classList.toggle('on',r==='seller');
-  document.getElementById('su-loc-label').textContent = r==='seller' ? 'Shop / office location' : 'Home address';
+  document.getElementById('su-loc-label').textContent = r==='seller' ? 'দোকান/অফিসের ঠিকানা' : 'বাসার ঠিকানা';
   document.getElementById('su-loc').placeholder = r==='seller' ? 'দোকান/অফিসের ঠিকানা' : 'বাসা/এলাকার ঠিকানা';
   document.getElementById('auth-ctx').textContent = r==='seller'
-    ? 'Seller account — list properties and manage inquiries.'
-    : 'Buyer account — browse, book and track homes.';
+    ? 'মালিক অ্যাকাউন্ট — বাসা list করো, inquiry manage করো।'
+    : 'ক্রেতা অ্যাকাউন্ট — বাসা খোঁজো, বুক করো, ট্র্যাক করো।';
 }
 function setAuthMode(m){
   authMode=m;
@@ -1496,8 +1503,8 @@ function openAuth(role='buyer',mode='login',lock=false){
   const rt=document.getElementById('role-toggle');
   if(rt) rt.style.display = lock ? 'none' : 'flex';
   document.getElementById('auth-ctx').textContent = lock
-    ? 'Booking requires a Buyer account. Login or sign up to continue.'
-    : (role==='seller' ? 'Seller account — list properties and manage inquiries.' : 'Buyer account — browse, book and track homes.');
+    ? 'বুকিং করতে ক্রেতা অ্যাকাউন্ট লাগবে — লগইন বা সাইন-আপ করে চালিয়ে যাও।'
+    : (role==='seller' ? 'মালিক অ্যাকাউন্ট — বাসা list করো, inquiry manage করো।' : 'ক্রেতা অ্যাকাউন্ট — বাসা খোঁজো, বুক করো, ট্র্যাক করো।');
   openM('auth-ov');
 }
 function requireAuth(role,action){ if(session)return true; pendingAction=action; openAuth('buyer','login',true); return false; }
@@ -1736,6 +1743,7 @@ async function logout(){
   await AuthSvc.signOut();
   notifUnsubscribe();
   session=null; _favIds=new Set(); _notifs=[];
+  if(typeof ConvMemory!=='undefined') ConvMemory.clear(); // shared-device leak প্রতিরোধ: পরের ইউজারের কাছে আগের budget/area/family-size না যায়
   const panel=document.getElementById('notif-panel'); if(panel)panel.style.display='none';
   renderNavAuth(); goPage('home');
 }
@@ -2215,7 +2223,7 @@ function _renderFaqAnswer(entry, forChatBubble){
   const parts=sections.filter(k=>entry[k]).map(k=>`<div style="margin-top:10px;font-size:.82rem;line-height:1.6"><b style="color:var(--gold)">${FAQ_SECTION_LABELS[k]}:</b> ${dtEsc(entry[k])}</div>`);
   return dtEsc(entry.a)+parts.join('');
 }
-let _chatWidgetTicketId=null, _chatWidgetPollTimer=null, _chatWidgetSeenMsgIds=new Set();
+let _chatWidgetTicketId=null, _chatWidgetPollTimer=null, _chatWidgetSeenMsgIds=new Set(), _chatWidgetFaqTried=false;
 
 function toggleChatWidget(){
   _chatWidgetOpen=!_chatWidgetOpen;
@@ -2225,7 +2233,7 @@ function toggleChatWidget(){
   if(!_chatWidgetOpen) _chatWidgetStopPolling();
 }
 function _chatWidgetGreet(){
-  _chatWidgetAdd('bot','হাই! এখানে যা লিখবে সরাসরি আমাদের support team-এর কাছে যাবে — এটা কোনো instant-answer বট না, তাই reply পেতে কিছুটা সময় লাগতে পারে। (বাসা খোঁজার মতো সাধারণ প্রশ্নের তাৎক্ষণিক উত্তরের জন্য উপরের মেনু থেকে "AI Assistant" পেজে যাও।)');
+  _chatWidgetAdd('bot','হাই! সাধারণ প্রশ্নের উত্তর এখানেই সাথে সাথে দেওয়ার চেষ্টা করব। উত্তর না মিললে বা আরেকটু জানতে চাইলে সরাসরি আমাদের support team-এর কাছে চলে যাবে (একটু সময় লাগতে পারে)। কী জানতে চাও?');
 }
 function _chatWidgetAdd(who,text,isTyping){
   const box=document.getElementById('chat-widget-msgs');
@@ -2244,6 +2252,19 @@ async function chatWidgetSend(){
   const q=inp.value.trim(); if(!q)return;
   if(!requireAuth('buyer',()=>{ document.getElementById('chat-widget-inp').value=q; chatWidgetSend(); })) return;
   _chatWidgetAdd('user',q); inp.value='';
+
+  // প্রথম মেসেজে আগে FAQ-এ instant উত্তর আছে কিনা দেখি (AI পেজের একই _matchFaqAny পুনর্ব্যবহার,
+  // নতুন matching-লজিক লেখা হয়নি) — মিললে সাথে সাথেই উত্তর, ticket তখনই বানানো হয় না।
+  // না মিললে বা ব্যবহারকারী আবার লিখলে (মানে FAQ কাজে দেয়নি) স্বাভাবিক human-relay চলে।
+  if(!_chatWidgetTicketId && !_chatWidgetFaqTried){
+    _chatWidgetFaqTried=true;
+    const m=_matchFaqAny(q);
+    if(m){
+      _chatWidgetAdd('bot', _renderFaqAnswer(m.entry,true));
+      _chatWidgetAdd('bot', '💬 এটা কাজে দিয়েছে তো? না হলে নিচে আবার লিখো — সরাসরি আমাদের support team-এর কাছে যাবে।');
+      return;
+    }
+  }
 
   try{
     if(!_chatWidgetTicketId){
@@ -2515,7 +2536,7 @@ async function renderSellerDash(){
     <div class="dash-side">
       <div class="dash-user-av" style="background:linear-gradient(135deg,var(--gold-l),var(--gold-d));color:#2a2005">${dtEsc((session.name||'S').trim()[0])}</div>
       <div class="dash-user-name">${dtEsc(session.name)}</div>
-      <div style="text-align:center;margin:6px 0 4px"><span class="role-badge seller">🏷️ Seller</span></div>
+      <div style="text-align:center;margin:6px 0 4px"><span class="role-badge seller">🏷️ মালিক</span></div>
       <div class="dash-user-email">📍 ${dtEsc(session.loc||'')}</div>
       <div class="dash-menu">
         <div class="dm" data-t="overview" onclick="sellerSetTab('overview')">📊 Overview</div>
@@ -3143,7 +3164,7 @@ async function renderBuyerDash(){
     <div class="dash-side">
       <div class="dash-user-av">${dtEsc((session.name||'U').trim()[0]||'U')}</div>
       <div class="dash-user-name">${dtEsc(session.name)}</div>
-      <div style="text-align:center;margin:6px 0 4px"><span class="role-badge buyer">🛒 Buyer</span></div>
+      <div style="text-align:center;margin:6px 0 4px"><span class="role-badge buyer">🛒 ক্রেতা</span></div>
       <div class="dash-user-email">@${dtEsc(session.user||'')} · ${dtEsc(session.phone||'')}</div>
       <div class="dash-menu">
         <div class="dm" data-t="overview" onclick="buyerSetTab('overview')">📊 Overview</div>
@@ -3202,7 +3223,7 @@ function buyerSavedHtml(compact){
         <div class="prop-body"><div class="prop-title">${dtEsc(p.title)}</div><div class="prop-loc">📍 ${dtEsc(p.area)}, ${dtEsc(p.city)}</div>
         <div class="prop-footer"><div class="prop-price">৳${(p.rent||0).toLocaleString()}<small>/mo</small></div>
         <button class="prop-btn" onclick="openDetail(${p.id})">দেখো</button></div></div></div>`).join('')
-    : `<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--white-30);font-family:var(--font-ui)">এখনো কোনো বাসা save করোনি। বাসার কার্ডে ♡ চাপলেই এখানে জমা হবে।</div>`;
+    : `<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--white-30);font-family:var(--font-ui)">এখনো কোনো বাসা save করোনি। বাসার কার্ডে ♡ চাপলেই এখানে জমা হবে।<div style="margin-top:14px"><button class="btn-outline" onclick="goPage('listings')" style="padding:8px 18px;font-size:.8rem">🔍 বাসা খুঁজতে যাও</button></div></div>`;
   return `<div class="dash-card"><div class="dash-card-title">${title}</div><div class="prop-grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))">${html}</div></div>`;
 }
 
@@ -3504,7 +3525,7 @@ function buyerSupportHtml(){
       <textarea id="tk-message" rows="3" placeholder="বিস্তারিত লিখো..." style="width:100%;margin-bottom:8px;padding:10px 12px;background:var(--glass);border:1px solid var(--border);border-radius:8px;color:var(--white);font-family:var(--font-ui);font-size:.85rem;resize:vertical"></textarea>
       <label style="display:inline-flex;align-items:center;gap:6px;margin-bottom:10px;font-family:var(--font-ui);font-size:.78rem;color:var(--white-30);cursor:pointer">📎 ছবি/ডকুমেন্ট যোগ করো<input type="file" id="tk-attach" multiple accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="_updateAttachLabel('tk-attach')"/></label>
       <span id="tk-attach-label" style="font-family:var(--font-ui);font-size:.75rem;color:var(--white-30);margin-left:6px"></span>
-      <button class="auth-submit" onclick="submitTicket()">টিকেট জমা দাও</button>
+      <button class="auth-submit" id="tk-submit-btn" onclick="submitTicket()">টিকেট জমা দাও</button>
     </div>`;
   const emergencyBox=`
     <div class="dash-card" style="margin-bottom:16px;background:rgba(179,38,47,.08);border-color:rgba(179,38,47,.3)">
@@ -3572,17 +3593,22 @@ async function submitTicket(overrideCategory,overridePriority){
   const priority=_pendingEmergencyPriority?'emergency':(overridePriority||document.getElementById('tk-priority')?.value||'medium');
   _pendingEmergencyPriority=false; // পরের সাধারণ টিকেটে যেন লিক না হয়
   if(!subject||!message){ toast('বিষয় ও বিস্তারিত লেখো','err'); return; }
-  const fileInp=document.getElementById('tk-attach');
-  const attachments = fileInp?.files?.length ? await _uploadAttachments(fileInp.files) : [];
-  const{data:ticket,error}=await abashonDB.from('support_tickets').insert({
-    user_id:session.id, subject, category:cat, priority
-  }).select().single();
-  if(error){ toast(friendlyError(error),'err'); return; }
-  const{error:msgErr}=await abashonDB.from('support_messages').insert({ ticket_id:ticket.id, sender_id:session.id, is_admin_reply:false, message, attachment_paths:attachments });
-  if(msgErr){ toast(friendlyError(msgErr),'err'); return; }
-  _buyerTickets.unshift(ticket);
-  toast(`✓ টিকেট জমা হয়েছে — ${ticketIdFmt(ticket.id)}`,'',3000);
-  buyerRenderBody();
+  const btn=document.getElementById('tk-submit-btn');
+  const orig=btn?btn.innerHTML:''; if(btn){ btn.disabled=true; btn.innerHTML='<span class="svc-spin"></span> জমা হচ্ছে…'; }
+  try{
+    const fileInp=document.getElementById('tk-attach');
+    const attachments = fileInp?.files?.length ? await _uploadAttachments(fileInp.files) : [];
+    const{data:ticket,error}=await abashonDB.from('support_tickets').insert({
+      user_id:session.id, subject, category:cat, priority
+    }).select().single();
+    if(error){ toast(friendlyError(error),'err'); return; }
+    const{error:msgErr}=await abashonDB.from('support_messages').insert({ ticket_id:ticket.id, sender_id:session.id, is_admin_reply:false, message, attachment_paths:attachments });
+    if(msgErr){ toast(friendlyError(msgErr),'err'); return; }
+    _buyerTickets.unshift(ticket);
+    toast(`✓ টিকেট জমা হয়েছে — ${ticketIdFmt(ticket.id)}`,'',3000);
+    buyerRenderBody();
+  }catch(e){ toast(friendlyError(e),'err'); }
+  finally{ if(btn){ btn.disabled=false; btn.innerHTML=orig; } }
 }
 function openEmergencyTicket(category,label){
   if(!requireAuth('buyer',()=>openEmergencyTicket(category,label)))return;
